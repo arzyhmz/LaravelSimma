@@ -25,7 +25,7 @@ Route::resource('contacts', contactAPIController::class);
 Route::get('list-change-simma', [QontactSimmaController::class, 'list_change_simma'])
     ->name('list_change_simma');
 
-Route::get('list-change-simaa-detail', [QontactSimmaController::class, 'list_change_simma_detail'])
+ Route::get('detail-simma', [QontactSimmaController::class, 'list_change_simma_detail'])
     ->name('list_change_simma_detail');
 
 Route::get('post-contact-to-qontact', [QontactSimmaController::class, 'post_contact_to_qontact'])

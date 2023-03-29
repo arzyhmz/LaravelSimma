@@ -66,8 +66,31 @@ class QontactSimmaController extends Controller{
     }
 
     public function post_contact_to_qontact(Request $request){
-        // loop change list from database
-        // hit every record from simma to get detail and save to database with status to post
-        return response()->json(['message'=>'Berhasil tambah data', 'status'=>'success']);
+        // get qontact token
+        $response = Http::asForm()->post('https://app.qontak.com/oauth/token/', [
+            "username"=> "trialwahanavisi@qontak.com",
+            "password"=> "Password123!",
+            "grant_type" => "password"
+        ]);
+        $response = $response->json();
+        $token = $response["access_token"];
+
+        // use token to post create contact to qontact  
+        $contacts = $this->contactRepository->allquery()->where('need_tp_post', 'true')->get();
+        foreach ($contacts as $contact) {
+            // post to qontact
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$token,
+            ])->asForm()->post('https://app.qontak.com/api/v3.1/contacts/', [
+                "first_name"=> $contact['name']
+            ]);
+            $response = $response->json();
+            // udpate in database
+            $input = ['need_tp_post' => 'false'];
+            $contact->update($input);
+            // usleep(1000000);  // sleep avery 3 second
+        }
+
+        return response()->json(['data'=>$token, 'status'=>'success']);
     }
 }
