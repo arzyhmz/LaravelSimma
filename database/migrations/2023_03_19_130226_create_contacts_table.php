@@ -20,12 +20,12 @@ class CreateContactsTable extends Migration
             $table->string('contact_email')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('status')->nullable();
-            $table->date('date_of_birth')->nullable();
+            $table->string('date_of_birth')->nullable();
             $table->string('source')->nullable();
             $table->string('sponsor_id')->nullable();
             $table->string('name_see')->nullable();
             $table->string('motivation_code')->nullable();
-            $table->date('join_date')->nullable();
+            $table->string('join_date')->nullable();
             $table->string('sp')->nullable();
             $table->string('title')->nullable();
             $table->string('en')->nullable();
@@ -33,6 +33,7 @@ class CreateContactsTable extends Migration
             $table->string('dr')->nullable();
             $table->string('email_sponsor')->nullable();
             $table->string('need_tp_post')->nullable();
+            $table->string('qontact_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
