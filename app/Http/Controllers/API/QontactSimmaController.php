@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\contactRepository;
 use Illuminate\Support\Facades\Http;
+use App\Models\contact;
  
 
 
@@ -16,17 +17,27 @@ class QontactSimmaController extends Controller{
     }
 
     public function list_change_simma(Request $request){
-        // get list chage save to database
-        // save to database as to send
         $token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
         $response = Http::withHeaders([
             'Authorization' => $token,
-        ])->post('simma.wahanavisi.org/laravel/public/v2/origin-wab', [
-            "TableName"=> "PartnerPhones",
-            "TableID"=> "84100"
-        ]);
-        return $response;
-        // return response()->json(['message'=>'Berhasil tambah data', 'status'=>'success']);
+        ])->get('simma.wahanavisi.org/laravel/public/v2/origin-wab');
+
+        $datas = $response->json();
+        foreach ($datas as $data) {
+            $prevData = $this->contactRepository->allquery()->where('table_id', $data['TableID']);
+            $payload = [
+                'table_id' => $data['TableID'],
+                'table_name' => $data['TableName'],
+                'date_added' => $data['DateAdded'],
+                'update_at' => $data['updated_at'],
+                'need_tp_post' => 'true'
+            ];
+            if ($prevData->count() > 0)
+                $prevData->update($payload);
+            else
+                $contact = $this->contactRepository->create($payload);
+        }
+        return response()->json(['data'=>$response->json(), 'status'=>'success']);
     }
 
     public function list_change_simma_detail(Request $request){

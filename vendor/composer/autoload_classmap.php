@@ -33,6 +33,7 @@ return array(
     'App\\Http\\Requests\\API\\UpdatecontactAPIRequest' => $baseDir . '/app/Http/Requests/API/UpdatecontactAPIRequest.php',
     'App\\Http\\Requests\\CreatecontactRequest' => $baseDir . '/app/Http/Requests/CreatecontactRequest.php',
     'App\\Http\\Requests\\UpdatecontactRequest' => $baseDir . '/app/Http/Requests/UpdatecontactRequest.php',
+    'App\\Jobs\\LongRunningProcessJob' => $baseDir . '/app/Jobs/LongRunningProcessJob.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\contact' => $baseDir . '/app/Models/contact.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',

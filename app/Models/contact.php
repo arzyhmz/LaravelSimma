@@ -41,7 +41,6 @@ class contact extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
         'name',
         'contact_email',
@@ -59,8 +58,14 @@ class contact extends Model
         'pl',
         'dr',
         'email_sponsor',
-        'need_tp_post'
+        'need_tp_post',
+        'table_id',
+        'table_name',
+        'date_added',
+        'update_at',
+        'partner_id',
     ];
+
 
     /**
      * The attributes that should be casted to native types.
@@ -86,7 +91,13 @@ class contact extends Model
         'pl' => 'string',
         'dr' => 'string',
         'email_sponsor' => 'string',
-        'need_tp_post' => 'string'
+        'need_tp_post' => 'string',
+        // neww
+        'table_id' => 'string',
+        'table_name' => 'string',
+        'date_added' => 'string',
+        'update_at' => 'string',
+        'partner_id' => 'string',
     ];
 
     /**

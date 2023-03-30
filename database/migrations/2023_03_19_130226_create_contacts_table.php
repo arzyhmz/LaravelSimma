@@ -22,7 +22,6 @@ class CreateContactsTable extends Migration
             $table->string('status')->nullable();
             $table->string('date_of_birth')->nullable();
             $table->string('source')->nullable();
-            $table->string('sponsor_id')->nullable();
             $table->string('name_see')->nullable();
             $table->string('motivation_code')->nullable();
             $table->string('join_date')->nullable();
@@ -33,6 +32,7 @@ class CreateContactsTable extends Migration
             $table->string('dr')->nullable();
             $table->string('email_sponsor')->nullable();
             $table->string('need_tp_post')->nullable();
+            $table->string('sponsor_id')->nullable();
             $table->string('qontact_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
