@@ -30,7 +30,8 @@ class QontactSimmaController extends Controller{
                 'table_name' => $data['TableName'],
                 'date_added' => $data['DateAdded'],
                 'update_at' => $data['updated_at'],
-                'need_tp_post' => 'true'
+                // 'need_tp_post' => 'true',
+                'status' => 'need_to_sync_detail'
             ];
             if ($prevData->count() > 0)
                 $prevData->update($payload);
@@ -43,7 +44,9 @@ class QontactSimmaController extends Controller{
     public function list_change_simma_detail(Request $request){
         // get list chage save to database
         // can direct hit every data from changment and save detail tod atabase
-        $datas = $this->contactRepository->allquery()->where('need_tp_post', 'true')->get();
+        $datas = $this->contactRepository->allquery()
+            ->limit(5)
+            ->where('status', 'need_to_sync_detail')->get();
 
         foreach ($datas as $data) {
             $data['table_name'];
@@ -54,33 +57,29 @@ class QontactSimmaController extends Controller{
                 "TableName"=> $data['table_name'],
                 "TableID"=> $data['table_id']
             ]);
-            try {
-                $response = $response->json();
-                $response = $response[0];
-                $payload = array(
-                    "name"=>$response["first_name"].' '.$response["last_name"],
-                    // 'contact_email' => $response["Contact Email"],
-                    'phone_number' => $response["phone_number"],
-                    // 'status' => $response["Status"],
-                    'date_of_birth'  => $response["date_of_birth"],
-                    'source' => $response["source"],
-                    'sponsor_id' => $response["partner_id"],
-                    // 'name_see' => $response["Nama SEE"],
-                    'motivation_code' => $response["motivation_code"],
-                    'join_date' => $response["join_date"],
-                    // 'sp' => $response["SP"],
-                    'title' => $response["title"],
-                    // 'en' => $response["EN"],
-                    // 'pl' => $response["PL"],
-                    // 'dr' => $response["DR"],
-                    'email_sponsor' => $response["email_sponsor"],
-                    'need_tp_post' => 'true'
-                );
-                $data->update($payload);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-            
+            $response = $response->json();
+            $response = $response[0];
+            $payload = array(
+                "name"=>$response["first_name"].' '.$response["last_name"],
+                // 'contact_email' => $response["Contact Email"],
+                'phone_number' => $response["phone_number"],
+                // 'status' => $response["Status"],
+                'date_of_birth'  => $response["date_of_birth"],
+                'source' => $response["source"],
+                'sponsor_id' => $response["partner_id"],
+                // 'name_see' => $response["Nama SEE"],
+                'motivation_code' => $response["motivation_code"],
+                'join_date' => $response["join_date"],
+                // 'sp' => $response["SP"],
+                'title' => $response["title"],
+                // 'en' => $response["EN"],
+                // 'pl' => $response["PL"],
+                // 'dr' => $response["DR"],
+                'email_sponsor' => $response["email_sponsor"],
+                // 'need_tp_post' => 'true',
+                'status' => 'need_to_post',
+            );
+            $data->update($payload);
         }
 
         return response()->json(['message'=>'Berhasil tambah data', 'status'=>'success']);
@@ -97,7 +96,9 @@ class QontactSimmaController extends Controller{
         $token = $response["access_token"];
 
         // use token to post create contact to qontact  
-        $contacts = $this->contactRepository->allquery()->where('need_tp_post', 'true')->get();
+        $contacts = $this->contactRepository->allquery()
+            ->limit(5)
+            ->where('status', 'need_to_post')->get();
         foreach ($contacts as $contact) {
             // post to qontact
             $response = Http::withHeaders([
@@ -107,7 +108,7 @@ class QontactSimmaController extends Controller{
             ]);
             $response = $response->json();
             // udpate in database
-            $input = ['need_tp_post' => 'false'];
+            $input = ['status' => 'posted_to_qontact'];
             $contact->update($input);
             // usleep(1000000);  // sleep avery 3 second
         }

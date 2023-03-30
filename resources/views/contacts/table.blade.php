@@ -5,14 +5,13 @@
                 <th>Table ID</th>
                 <th>Partner ID</th>
                 <th>Qonctact ID</th>
+                <th>Status</th>
                 <th>Name</th>
                 <!-- <th>Contact Email</th> -->
                 <th>Phone Number</th>
-                <!-- <th>Status</th> -->
-                <th>Date Of Birth</th>
-                <th>Motivation Code</th>
+                <!-- <th>Date Of Birth</th> -->
+                <!-- <th>Motivation Code</th> -->
                 <th>Join Date</th>
-                <th>Need To Post</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -22,14 +21,13 @@
                 <td>{{ $contact->table_id }}</td>
                 <td>{{ $contact->partner_id }}</td>
                 <td>{{ $contact->qontact_id }}</td>
+                <td>{{ $contact->status }}</td> 
                 <td>{{ $contact->name }}</td>
                 <!-- <td>{{ $contact->contact_email }}</td> -->
                 <td>{{ $contact->phone_number }}</td>
-                <!-- <td>{{ $contact->status }}</td> -->
-                <td>{{ $contact->date_of_birth }}</td>
-                <td>{{ $contact->motivation_code }}</td>
+                <!-- <td>{{ $contact->date_of_birth }}</td> -->
+                <!-- <td>{{ $contact->motivation_code }}</td> -->
                 <td>{{ $contact->join_date }}</td>
-                <td>{{ $contact->need_tp_post }}</td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
