@@ -37,27 +37,29 @@ class QontactSimmaController extends Controller{
             'Authorization' => $token,
         ])->post('simma.wahanavisi.org/laravel/public/v2/changes-wab', [
             "TableName"=> "PartnerPhones",
-            "TableID"=> "84100"
+            "TableID"=> "84077"
         ]);
+        $response = $response->json();
+        $response = $response[0];
         // return $response;
 
         $payload = array(
-            "name"=>$response["First Name"],
-            'contact_email' => $response["Contact Email"],
-            'phone_number' => $response["Phone Number"],
-            'status' => $response["Status"],
-            'date_of_birth'  => $response["Date of Birth"],
-            'source' => $response["Source"],
-            'sponsor_id' => $response["Sponsor ID"],
-            'name_see' => $response["Nama SEE"],
-            'motivation_code' => $response["Motivation Code"],
-            'join_date' => $response["Join Date"],
-            'sp' => $response["SP"],
-            'title' => $response["Title"],
-            'en' => $response["EN"],
-            'pl' => $response["PL"],
-            'dr' => $response["DR"],
-            'email_sponsor' => $response["Email Sponsor"],
+            "name"=>$response["first_name"].' '.$response["last_name"],
+            // 'contact_email' => $response["Contact Email"],
+            'phone_number' => $response["phone_number"],
+            // 'status' => $response["Status"],
+            'date_of_birth'  => $response["date_of_birth"],
+            'source' => $response["source"],
+            'sponsor_id' => $response["partner_id"],
+            // 'name_see' => $response["Nama SEE"],
+            'motivation_code' => $response["motivation_code"],
+            'join_date' => $response["join_date"],
+            // 'sp' => $response["SP"],
+            'title' => $response["title"],
+            // 'en' => $response["EN"],
+            // 'pl' => $response["PL"],
+            // 'dr' => $response["DR"],
+            'email_sponsor' => $response["email_sponsor"],
             'need_tp_post' => 'true'
         );
         $contact = $this->contactRepository->create($payload);

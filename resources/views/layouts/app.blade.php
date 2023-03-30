@@ -27,10 +27,10 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="#">
-        <img class="navbar-brand-full" src="http://infyom.com/images/logo/blue_logo_150x150.jpg" width="30" height="30"
-             alt="InfyOm Logo">
-        <img class="navbar-brand-minimized" src="http://infyom.com/images/logo/blue_logo_150x150.jpg" width="30"
-             height="30" alt="InfyOm Logo">
+        <img class="navbar-brand-full" src="{{ asset('/logo.png') }}" width="50" height="50"
+             alt="Simma Logo">
+        <img class="navbar-brand-minimized" src="{{ asset('/logo.png') }}" width="50"
+             height="50" alt="Simma Logo">
     </a>
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>

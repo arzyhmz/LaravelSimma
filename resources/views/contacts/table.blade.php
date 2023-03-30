@@ -3,9 +3,9 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Contact Email</th>
+                <!-- <th>Contact Email</th> -->
                 <th>Phone Number</th>
-                <th>Status</th>
+                <!-- <th>Status</th> -->
                 <th>Date Of Birth</th>
                 <th>Motivation Code</th>
                 <th>Join Date</th>
@@ -17,9 +17,9 @@
         @foreach($contacts as $contact)
             <tr>
                 <td>{{ $contact->name }}</td>
-                <td>{{ $contact->contact_email }}</td>
+                <!-- <td>{{ $contact->contact_email }}</td> -->
                 <td>{{ $contact->phone_number }}</td>
-                <td>{{ $contact->status }}</td>
+                <!-- <td>{{ $contact->status }}</td> -->
                 <td>{{ $contact->date_of_birth }}</td>
                 <td>{{ $contact->motivation_code }}</td>
                 <td>{{ $contact->join_date }}</td>
@@ -29,7 +29,7 @@
                     <div class='btn-group'>
                         <a href="{{ route('contacts.show', [$contact->id]) }}" class='btn btn-ghost-success'><i class="fa fa-eye"></i></a>
                         <!-- <a href="{{ route('contacts.edit', [$contact->id]) }}" class='btn btn-ghost-info'><i class="fa fa-edit"></i></a> -->
-                        <!-- {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-ghost-danger', 'onclick' => "return confirm('Are you sure?')"]) !!} -->
+                        {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-ghost-danger', 'onclick' => "return confirm('Are you sure?')"]) !!}
                     </div>
                     {!! Form::close() !!}
                 </td>
