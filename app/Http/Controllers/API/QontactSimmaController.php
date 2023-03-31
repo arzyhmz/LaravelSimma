@@ -72,6 +72,7 @@ class QontactSimmaController extends Controller{
                 'join_date' => $response["join_date"],
                 // 'sp' => $response["SP"],
                 'title' => $response["title"],
+                'partner_id' => $response["partner_id"],
                 // 'en' => $response["EN"],
                 // 'pl' => $response["PL"],
                 // 'dr' => $response["DR"],
@@ -97,7 +98,7 @@ class QontactSimmaController extends Controller{
 
         // use token to post create contact to qontact  
         $contacts = $this->contactRepository->allquery()
-            ->limit(5)
+            ->limit(1)
             ->where('status', 'need_to_post')->get();
         foreach ($contacts as $contact) {
             // post to qontact
@@ -107,8 +108,11 @@ class QontactSimmaController extends Controller{
                 "first_name"=> $contact['name']
             ]);
             $response = $response->json();
-            // udpate in database
-            $input = ['status' => 'posted_to_qontact'];
+
+            $input = [
+                'qontact_id' => $response['response']['id'], 
+                'status' =>  'posted_to_qontact'
+            ];
             $contact->update($input);
             // usleep(1000000);  // sleep avery 3 second
         }

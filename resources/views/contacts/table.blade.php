@@ -4,7 +4,7 @@
             <tr>
                 <th>Table ID</th>
                 <th>Partner ID</th>
-                <th>Qonctact ID</th>
+                <th>Qontact ID</th>
                 <th>Status</th>
                 <th>Name</th>
                 <!-- <th>Contact Email</th> -->

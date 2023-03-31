@@ -64,6 +64,7 @@ class contact extends Model
         'date_added',
         'update_at',
         'partner_id',
+        'qontact_id'
     ];
 
 
