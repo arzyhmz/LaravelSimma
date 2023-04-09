@@ -2,7 +2,7 @@
     <table class="table table-striped" id="contacts-table">
         <thead>
             <tr>
-                <!-- <th>Table ID</th> -->
+                <th>Table ID</th>
                 <th>Sponsor ID</th>
                 <!-- <th>Qontact ID</th> -->
                 <th>Name</th>
@@ -18,7 +18,7 @@
         <tbody>
         @foreach($contacts as $contact)
             <tr>
-                <!-- <td>{{ $contact->table_id }}</td> -->
+                <td>{{ $contact->table_id }}</td>
                 <td>{{ $contact->partner_id }}</td>
                 <td>{{ $contact->name }}</td>
                 <!-- <td>{{ $contact->qontact_id }}</td> -->
@@ -26,7 +26,6 @@
                 <!-- <td>{{ $contact->contact_email }}</td> -->
                 <td>{{ $contact->phone_number }}</td>
                 <td>{{ $contact->join_date }}</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td>

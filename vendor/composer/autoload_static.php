@@ -570,7 +570,7 @@ class ComposerStaticInitecc9bca2221b305e85a497c66754d02d
         'App\\Http\\Requests\\API\\UpdatecontactAPIRequest' => __DIR__ . '/../..' . '/app/Http/Requests/API/UpdatecontactAPIRequest.php',
         'App\\Http\\Requests\\CreatecontactRequest' => __DIR__ . '/../..' . '/app/Http/Requests/CreatecontactRequest.php',
         'App\\Http\\Requests\\UpdatecontactRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdatecontactRequest.php',
-        'App\\Jobs\\LongRunningProcessJob' => __DIR__ . '/../..' . '/app/Jobs/LongRunningProcessJob.php',
+        'App\\Jobs\\GetDetailContactFromSimma' => __DIR__ . '/../..' . '/app/Jobs/GetDetailContactFromSimma.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\contact' => __DIR__ . '/../..' . '/app/Models/contact.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
