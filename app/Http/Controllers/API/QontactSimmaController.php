@@ -1,5 +1,7 @@
 <?php
 
+use DateTime;
+
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -120,14 +122,14 @@ class QontactSimmaController extends Controller{
                     'qontact_id' => $response['response']['id'], 
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'success',
-                    'posted_to_qontact_date' => date('Y-m-d H:i:s')
+                    'posted_to_qontact_date' => new \DateTime()
                 ];  
             } else {
                 $input = [
                     'error_message' => $response,
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'failed',
-                    'posted_to_qontact_date' => date('Y-m-d H:i:s')
+                    'posted_to_qontact_date' => new \DateTime()
                 ];  
             }
             $contact->update($input);
