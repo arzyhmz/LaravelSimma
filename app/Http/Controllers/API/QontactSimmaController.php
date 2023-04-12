@@ -104,7 +104,7 @@ class QontactSimmaController extends Controller{
 
         // use token to post create contact to qontact  
         $contacts = $this->contactRepository->allquery()
-            ->limit(1)
+            ->limit(30)
             ->where('status', 'need_to_post')->get();
         foreach ($contacts as $contact) {
             // post to qontact

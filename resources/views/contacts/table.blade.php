@@ -26,7 +26,7 @@
                 <!-- <td>{{ $contact->contact_email }}</td> -->
                 <td>{{ $contact->phone_number }}</td>
                 <td>{{ $contact->join_date }}</td>
-                <td></td>
+                <td>{{ $contact->posted_to_qontact_date }}</td>
                 <td></td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}
