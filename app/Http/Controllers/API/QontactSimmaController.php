@@ -1,7 +1,5 @@
 <?php
 
-use DateTime;
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -26,7 +24,8 @@ class QontactSimmaController extends Controller{
 
         $datas = $response->json();
         foreach ($datas as $data) {
-            $prevData = $this->contactRepository->allquery()->where('table_id', $data['TableID']);
+            $prevData = $this->contactRepository->allquery()
+                ->where('table_id', $data['TableID']);
             $payload = [
                 'table_id' => $data['TableID'],
                 'table_name' => $data['TableName'],
@@ -37,8 +36,9 @@ class QontactSimmaController extends Controller{
             ];
             if ($prevData->count() > 0)
                 $prevData->update($payload);
-            else
+            else {
                 $contact = $this->contactRepository->create($payload);
+            }
         }
         return response()->json(['data'=>$response->json(), 'status'=>'success']);
     }
@@ -49,7 +49,7 @@ class QontactSimmaController extends Controller{
         // 
         $datas = $this->contactRepository->allquery()
             ->orderBy('table_id', 'ASC')
-            ->limit(30)
+            ->limit(20)
             ->where('status', 'need_to_sync_detail')->get();
         GetDetailContactFromSimma::dispatch($datas);
         // foreach ($datas as $data) {
@@ -104,7 +104,8 @@ class QontactSimmaController extends Controller{
 
         // use token to post create contact to qontact  
         $contacts = $this->contactRepository->allquery()
-            ->limit(30)
+            ->limit(20)
+            ->orderBy('table_id', 'ASC')
             ->where('status', 'need_to_post')->get();
         foreach ($contacts as $contact) {
             // post to qontact
@@ -115,22 +116,25 @@ class QontactSimmaController extends Controller{
             ]);
             $response = $response->json();
 
+            $current_date = date('Y-m-d H:i:s');
+
             if ($response['response']['id']){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'success',
-                    'posted_to_qontact_date' => new \DateTime()
+                    'posted_to_qontact_date' => $current_date
                 ];  
+                $contact->update($input);
             } else {
                 $input = [
                     'error_message' => $response,
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'failed',
-                    'posted_to_qontact_date' => new \DateTime()
+                    'posted_to_qontact_date' => $current_date
                 ];  
+                $contact->update($input);
             }
-            $contact->update($input);
             // usleep(1000000);  // sleep avery 3 second
         }
 

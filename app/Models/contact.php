@@ -64,7 +64,11 @@ class contact extends Model
         'date_added',
         'update_at',
         'partner_id',
-        'qontact_id'
+        'qontact_id',
+        'posted_to_qontact_date',
+        'error_message',
+        'posted_status'
+
     ];
 
 
@@ -99,6 +103,9 @@ class contact extends Model
         'date_added' => 'string',
         'update_at' => 'string',
         'partner_id' => 'string',
+        'posted_to_qontact_date' => 'string',
+        'error_message' => 'string',
+        'posted_status' => 'string',
     ];
 
     /**
