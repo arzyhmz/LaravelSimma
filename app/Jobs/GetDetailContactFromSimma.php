@@ -59,9 +59,9 @@ class GetDetailContactFromSimma implements ShouldQueue
                 $data->update($payload);
             }
             $i++;
-            if ($i % 5 == 0) {
-                sleep(10);
-            }
+            // if ($i % 5 == 0) {
+            //     sleep(10);
+            // }
         }
     }
 }

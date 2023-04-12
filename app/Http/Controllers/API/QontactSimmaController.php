@@ -10,7 +10,6 @@ use App\Models\contact;
 use App\Jobs\GetDetailContactFromSimma;
 
 
-
 class QontactSimmaController extends Controller{
     private $contactRepository;
     public function __construct(contactRepository $contactRepo){
@@ -47,6 +46,8 @@ class QontactSimmaController extends Controller{
         // can direct hit every data from changment and save detail tod atabase
         // 
         $datas = $this->contactRepository->allquery()
+            ->orderBy('table_id', 'ASC')
+            ->limit(30)
             ->where('status', 'need_to_sync_detail')->get();
         GetDetailContactFromSimma::dispatch($datas);
         // foreach ($datas as $data) {
