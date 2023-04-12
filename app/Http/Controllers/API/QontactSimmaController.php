@@ -115,8 +115,6 @@ class QontactSimmaController extends Controller{
             ]);
             $response = $response->json();
 
-            $date = new DateTime();
-
             if ($response['response']['id']){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
