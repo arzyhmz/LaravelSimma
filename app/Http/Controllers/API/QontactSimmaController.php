@@ -113,19 +113,21 @@ class QontactSimmaController extends Controller{
             ]);
             $response = $response->json();
 
+            $date = new DateTime();
+
             if ($response['response']['id']){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'success',
-                    'posted_to_qontact_date' => new date('Y-m-d')
+                    'posted_to_qontact_date' => date('Y-m-d H:i:s')
                 ];  
             } else {
                 $input = [
                     'error_message' => $response,
                     'status' =>  'posted_to_qontact',
                     'posted_status' => 'failed',
-                    'posted_to_qontact_date' => new date('Y-m-d'),
+                    'posted_to_qontact_date' => date('Y-m-d H:i:s')
                 ];  
             }
             $contact->update($input);
