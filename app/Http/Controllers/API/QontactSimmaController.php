@@ -112,7 +112,19 @@ class QontactSimmaController extends Controller{
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$token,
             ])->asForm()->post('https://app.qontak.com/api/v3.1/contacts/', [
-                "first_name"=> $contact['name']
+                "first_name"=> $contact['name'],
+                "last_name"=> $contact['name'],
+                "email"=> $contact['contact_email'],
+                "telephone"=> $contact['phone_number'],
+                "job_title"=> $contact[''],
+                "creator_od"=> $contact[''],
+                "creator_name"=> $contact[''],
+                "address"=> $contact[''],
+                "country"=> $contact[''],
+                "province"=> $contact[''],
+                "city"=> $contact[''],
+                "zip_code"=> $contact[''],
+                "date_of_birth"=> $contact['']
             ]);
             $response = $response->json();
 
