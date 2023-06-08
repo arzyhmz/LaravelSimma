@@ -27,10 +27,10 @@ class AddFieldsToContacts extends Migration
      */
     public function down()
     {
-        Schema::table('contacts', function (Blueprint $table) {
-            $table->string('posted_to_qontact_date')->nullable();
-            $table->string('error_message')->nullable();
-            $table->string('posted_status')->nullable(); #success, failed
-        });
+        // Schema::table('contacts', function (Blueprint $table) {
+        //     $table->string('posted_to_qontact_date')->nullable();
+        //     $table->string('error_message')->nullable();
+        //     $table->string('posted_status')->nullable(); #success, failed
+        // });
     }
 }

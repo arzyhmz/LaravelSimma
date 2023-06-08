@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldsToContactss extends Migration
+class AddFiledToContacts extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,10 @@ class AddFieldsToContactss extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->string('posted_to_qontact_date')->nullable();
-            $table->string('error_message')->nullable();
-            $table->string('posted_status')->nullable(); #success, failed
+            $table->string('wa_number')->nullable();
+            $table->string('IDN')->nullable();
+            $table->string('wa_countrycode')->nullable(); #success, failed
+            $table->string('username_wa')->nullable(); #success, failed
         });
     }
 
@@ -28,9 +29,7 @@ class AddFieldsToContactss extends Migration
     public function down()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            // $table->string('posted_to_qontact_date')->nullable();
-            // $table->string('error_message')->nullable();
-            // $table->string('posted_status')->nullable(); #success, failed
+            //
         });
     }
 }

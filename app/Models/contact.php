@@ -67,12 +67,15 @@ class contact extends Model
         'qontact_id',
         'posted_to_qontact_date',
         'error_message',
-        'posted_status'
-
+        'posted_status',
+        'wa_number',
+        'IDN',
+        'wa_countrycode',
+        'username_wa'
     ];
 
-
     /**
+     * 
      * The attributes that should be casted to native types.
      *
      * @var array
@@ -106,6 +109,10 @@ class contact extends Model
         'posted_to_qontact_date' => 'string',
         'error_message' => 'string',
         'posted_status' => 'string',
+        'wa_number' => 'string',
+        'IDN' => 'string',
+        'wa_countrycode' => 'string',
+        'username_wa' => 'string'
     ];
 
     /**

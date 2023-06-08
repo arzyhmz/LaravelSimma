@@ -33,7 +33,20 @@ class contactRepository extends BaseRepository
         'pl',
         'dr',
         'email_sponsor',
-        'need_tp_post'
+        'need_tp_post',
+        'table_id',
+        'table_name',
+        'date_added',
+        'update_at',
+        'partner_id',
+        'qontact_id',
+        'posted_to_qontact_date',
+        'error_message',
+        'posted_status',
+        'wa_number',
+        'IDN',
+        'wa_countrycode',
+        'username_wa'
     ];
 
     /**

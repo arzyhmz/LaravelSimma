@@ -23,21 +23,41 @@ class QontactSimmaController extends Controller{
         ])->get('simma.wahanavisi.org/laravel/public/v2/origin-wab');
 
         $datas = $response->json();
+
         foreach ($datas as $data) {
-            $prevData = $this->contactRepository->allquery()
-                ->where('table_id', $data['TableID']);
-            $payload = [
-                'table_id' => $data['TableID'],
-                'table_name' => $data['TableName'],
-                'date_added' => $data['DateAdded'],
-                'update_at' => $data['updated_at'],
-                // 'need_tp_post' => 'true',
-                'status' => 'need_to_sync_detail'
-            ];
-            if ($prevData->count() > 0)
-                $prevData->update($payload);
-            else {
-                $contact = $this->contactRepository->create($payload);
+            if (isset($data[0])) {
+                $data = $data[0];
+                $prevData = $this->contactRepository->allquery()
+                    ->where('partner_id', $data['partner_id']);
+                $payload = [
+                    'partner_id' => $data["partner_id"],           
+                    'name' => $data["Name"],
+                    'phone_number' => $data["phone_number"],
+                    'wa_number' => $data["wa_number"],
+                    'wa_countrycode' => $data["wa_countrycode"],
+                    'date_of_birth' => $data["date_of_birth"],
+                    'source' => $data["source"],
+                    'name_see' => $data["name_see"],
+                    'motivation_code' => $data["motivation_code"],
+                    'join_date' => $data["join_date"],
+                    'title' => $data["title"],
+                    'sp' => $data["state_sp"],
+                    'en' => $data["state_en"],
+                    'pl' => $data["state_pl"],
+                    'dr' => $data["state_dr"],
+                    'email_sponsor' => $data["email_sponsor"],
+                    'IDN' => $data["IDN"],
+                    'contact_email' => $data['email_sponsor'],
+                    'status' => 'need_to_post',
+                    'need_tp_post' => 'true',
+                    'sponsor_id' => 'string',
+                    'qontact_id' => 'string',
+                ];
+                if ($prevData->count() > 0)
+                    $prevData->update($payload);
+                else {
+                    $contact = $this->contactRepository->create($payload);
+                }
             }
         }
         return response()->json(['data'=>$response->json(), 'status'=>'success']);
@@ -101,35 +121,132 @@ class QontactSimmaController extends Controller{
         ]);
         $response = $response->json();
         $token = $response["access_token"];
-
         // use token to post create contact to qontact  
         $contacts = $this->contactRepository->allquery()
-            ->limit(20)
-            ->orderBy('table_id', 'ASC')
+            ->limit(1)
+            ->orderBy('partner_id', 'ASC')
             ->where('status', 'need_to_post')->get();
         foreach ($contacts as $contact) {
             // post to qontact
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$token,
-            ])->asForm()->post('https://app.qontak.com/api/v3.1/contacts/', [
+            $payload = [
+                'sponsor_id' => $contact["partner_id"],
                 "first_name"=> $contact['name'],
                 "last_name"=> $contact['name'],
-                "email"=> $contact['contact_email'],
-                "telephone"=> $contact['phone_number'],
-                "job_title"=> $contact[''],
-                "creator_od"=> $contact[''],
-                "creator_name"=> $contact[''],
-                "address"=> $contact[''],
-                "country"=> $contact[''],
-                "province"=> $contact[''],
-                "city"=> $contact[''],
-                "zip_code"=> $contact[''],
-                "date_of_birth"=> $contact['']
-            ]);
+                "telephone"=> $contact['phone_number'].$contact['phone_number'],
+                "date_of_birth"=> $contact['date_of_birth'],
+                "source"=> $contact['source'],
+                "additional_fields"=> [
+                    [
+                        "id"=> 8478028,
+                        "name"=> "nama_see",
+                        "value"=> $contact['nama_see'],
+                        "value_name"=> $contact['nama_see']
+                    ],
+                    [
+                        "id"=> 8478029,
+                        "name"=> "motivation_code",
+                        "value"=> $contact['motivation_code'],
+                        "value_name"=> $contact['motivation_code']
+                    ],
+                    [
+                        "id"=> 8478030,
+                        "name"=> "join_date",
+                        "value"=> $contact['join_date'],
+                        "value_name"=> $contact['join_date']
+                    ],
+                    // [
+                    //     "id"=> 8478026,
+                    //     "name"=> "title",
+                    //     "value"=> $contact['title'],
+                    //     "value_name"=> $contact['title']
+                    // ],
+                    [
+                        "id"=> 8478031,
+                        "name"=> "sp",
+                        "value"=> $contact['sp'],
+                        "value_name"=> $contact['sp']
+                    ],
+                    [
+                        "id"=> 8478032,
+                        "name"=> "en",
+                        "value"=> $contact['en'],
+                        "value_name"=> $contact['en']
+                    ],
+                    [
+                        "id"=> 8478033,
+                        "name"=> "pl",
+                        "value"=> $contact['pl'],
+                        "value_name"=> $contact['pl']
+                    ],
+                    [
+                        "id"=> 8478034,
+                        "name"=> "dr",
+                        "value"=> $contact['dr'],
+                        "value_name"=> $contact['dr']
+                    ],
+                    [
+                        "id"=> 8478025,
+                        "name"=> "email_sponsor",
+                        "value"=> $contact['email_sponsor'],
+                        "value_name"=> $contact['email_sponsor']
+                    ],
+                    [
+                        "id"=> 8478027,
+                        "name"=> "sponsor_id",
+                        "value"=> $contact['sponsor_id'],
+                        "value_name"=> $contact['sponsor_id']
+                    ],
+                    [
+                        "id"=> 8478035,
+                        "name"=> "child_id",
+                        "value"=> $contact['IDN'],
+                        "value_name"=> $contact['IDN'],
+                    ],
+                    [
+                        "id"=> 8478036,
+                        "name"=> "child_name",
+                        "value"=> null,
+                        "value_name"=> null
+                    ],
+                    [
+                        "id"=> 8478037,
+                        "name"=> "program_non_sponsorship",
+                        "value"=> null,
+                        "value_name"=> null
+                    ],
+                    [
+                        "id"=> 8478038,
+                        "name"=> "summary_ptd",
+                        "value"=> null,
+                        "value_name"=> null
+                    ],
+                    [
+                        "id"=> 8478039,
+                        "name"=> "upload_date",
+                        "value"=> date('Y-m-d H:i:s'),
+                        "value_name"=> date('Y-m-d H:i:s')
+                    ],
+                    [
+                        "id"=> 8478040,
+                        "name"=> "ptd",
+                        "value"=> null,
+                        "value_name"=> null
+                    ],
+                    [
+                        "id"=> 8478041,
+                        "name"=> "jumlah_anak_sponsor",
+                        "value"=> null,
+                        "value_name"=> null
+                    ]
+                ],
+                "unique_hub_account"=> null
+              ];
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$token,
+            ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
             $response = $response->json();
-
             $current_date = date('Y-m-d H:i:s');
-
+            dd($response);
             if ($response['response']['id']){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
@@ -147,7 +264,7 @@ class QontactSimmaController extends Controller{
                 ];  
                 $contact->update($input);
             }
-            // usleep(1000000);  // sleep avery 3 second
+            usleep(1000000);  // sleep avery 3 second
         }
 
         return response()->json(['data'=>$token, 'status'=>'success']);

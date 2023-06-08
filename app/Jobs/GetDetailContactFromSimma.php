@@ -36,7 +36,7 @@ class GetDetailContactFromSimma implements ShouldQueue
             if ($response) {
                 $response = $response[0];
                 $payload = array(
-                    "name"=>$response["first_name"].' '.$response["last_name"],
+                    "name"=> $response["first_name"].' '.$response["last_name"],
                     // 'contact_email' => $response["Contact Email"],
                     'phone_number' => $response["phone_number"],
                     // 'status' => $response["Status"],
