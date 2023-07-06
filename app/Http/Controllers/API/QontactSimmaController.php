@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\contactRepository;
+use App\Repositories\logsRepository;
 use Illuminate\Support\Facades\Http;
 use App\Models\contact;
 use App\Jobs\GetDetailContactFromSimma;
@@ -12,18 +13,28 @@ use App\Jobs\GetDetailContactFromSimma;
 
 class QontactSimmaController extends Controller{
     private $contactRepository;
-    public function __construct(contactRepository $contactRepo){
+    private $logsRepository;
+    public function __construct(contactRepository $contactRepo, logsRepository $logsRepo){
         $this->contactRepository = $contactRepo;
+        $this->logsRepository = $logsRepo;
+    }
+    private $simmaToken = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
+    private function getFromSimma($url) {
+        $response = Http::withHeaders([
+            'Authorization' => $this->simmaToken,
+        ])->get($url);
+        return $response;
     }
 
+
     public function list_change_simma(Request $request){
-        $token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
-        $response = Http::withHeaders([
-            'Authorization' => $token,
-        ])->get('simma.wahanavisi.org/laravel/public/v2/origin-wab');
-
+        $page = $request->get('page', '');
+        $url = "https://simma.wahanavisi.org/laravel/public/v2/origin-wab";
+        if($page) {
+            $url = $url."?page=".$page;
+        }
+        $response = $this->getFromSimma($url);
         $datas = $response->json();
-
         foreach ($datas as $data) {
             if (isset($data[0])) {
                 $data = $data[0];
@@ -45,17 +56,19 @@ class QontactSimmaController extends Controller{
                     'en' => $data["state_en"],
                     'pl' => $data["state_pl"],
                     'dr' => $data["state_dr"],
+                    'date_added' =>  date('Y-m-d H:i:s'),
                     'email_sponsor' => $data["email_sponsor"],
                     'IDN' => $data["IDN"],
                     'contact_email' => $data['email_sponsor'],
-                    'status' => 'need_to_post',
+                    'status' => "0",
                     'need_tp_post' => 'true',
                     'sponsor_id' => 'string',
                     'qontact_id' => 'string',
                 ];
-                if ($prevData->count() > 0)
+                if ($prevData->count() > 0) {
+                    $payload['update_at'] = date('Y-m-d H:i:s');
                     $prevData->update($payload);
-                else {
+                } else {
                     $contact = $this->contactRepository->create($payload);
                 }
             }
@@ -63,57 +76,8 @@ class QontactSimmaController extends Controller{
         return response()->json(['data'=>$response->json(), 'status'=>'success']);
     }
 
-    public function list_change_simma_detail(Request $request){
-        // get list chage save to database
-        // can direct hit every data from changment and save detail tod atabase
-        // 
-        $datas = $this->contactRepository->allquery()
-            ->orderBy('table_id', 'ASC')
-            ->limit(20)
-            ->where('status', 'need_to_sync_detail')->get();
-        GetDetailContactFromSimma::dispatch($datas);
-        // foreach ($datas as $data) {
-        //     $data['table_name'];
-        //     $token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
-        //     $response = Http::withHeaders([
-        //         'Authorization' => $token,
-        //     ])->post('simma.wahanavisi.org/laravel/public/v2/changes-wab', [
-        //         "TableName"=> $data['table_name'],
-        //         "TableID"=> $data['table_id']
-        //     ]);
-        //     $response = $response->json();
-        //     $response = $response[0];
-        //     $payload = array(
-        //         "name"=>$response["first_name"].' '.$response["last_name"],
-        //         // 'contact_email' => $response["Contact Email"],
-        //         'phone_number' => $response["phone_number"],
-        //         // 'status' => $response["Status"],
-        //         'date_of_birth'  => $response["date_of_birth"],
-        //         'source' => $response["source"],
-        //         'sponsor_id' => $response["partner_id"],
-        //         // 'name_see' => $response["Nama SEE"],
-        //         'motivation_code' => $response["motivation_code"],
-        //         'join_date' => $response["join_date"],
-        //         // 'sp' => $response["SP"],
-        //         'title' => $response["title"],
-        //         'partner_id' => $response["partner_id"],
-        //         // 'en' => $response["EN"],
-        //         // 'pl' => $response["PL"],
-        //         // 'dr' => $response["DR"],
-        //         'email_sponsor' => $response["email_sponsor"],
-        //         // 'need_tp_post' => 'true',
-        //         'status' => 'need_to_post',
-        //     );
-        //     $data->update($payload);
-        // }
-        return response()->json([
-            'message'=>'Process run in background, please wait the progress', 
-            'status'=>'success'
-        ]);
-    }
-
     public function post_contact_to_qontact(Request $request){
-        // get qontact token
+        $pageSize = $request->get('page_size', 10);
         $response = Http::asForm()->post('https://app.qontak.com/oauth/token/', [
             "username"=> "trialwahanavisi@qontak.com",
             "password"=> "Password123!",
@@ -121,13 +85,12 @@ class QontactSimmaController extends Controller{
         ]);
         $response = $response->json();
         $token = $response["access_token"];
-        // use token to post create contact to qontact  
         $contacts = $this->contactRepository->allquery()
-            ->limit(1)
+            ->limit($pageSize)
             ->orderBy('partner_id', 'ASC')
-            ->where('status', 'need_to_post')->get();
+            ->where('status', "0")->get();
+        $key = time();
         foreach ($contacts as $contact) {
-            // post to qontact
             $payload = [
                 'sponsor_id' => $contact["partner_id"],
                 "first_name"=> $contact['name'],
@@ -154,12 +117,6 @@ class QontactSimmaController extends Controller{
                         "value"=> $contact['join_date'],
                         "value_name"=> $contact['join_date']
                     ],
-                    // [
-                    //     "id"=> 8478026,
-                    //     "name"=> "title",
-                    //     "value"=> $contact['title'],
-                    //     "value_name"=> $contact['title']
-                    // ],
                     [
                         "id"=> 8478031,
                         "name"=> "sp",
@@ -240,17 +197,18 @@ class QontactSimmaController extends Controller{
                     ]
                 ],
                 "unique_hub_account"=> null
-              ];
+            ];
+            //   POST TO QONTACT
+            //   HARUS DI PISAH JADI METHOD SENDIRI
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$token,
             ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
             $response = $response->json();
             $current_date = date('Y-m-d H:i:s');
-            dd($response);
             if ($response['response']['id']){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
-                    'status' =>  'posted_to_qontact',
+                    'status' =>  "1",
                     'posted_status' => 'success',
                     'posted_to_qontact_date' => $current_date
                 ];  
@@ -264,6 +222,39 @@ class QontactSimmaController extends Controller{
                 ];  
                 $contact->update($input);
             }
+
+            //   CREATE OR UPDATE LOGS
+            //   HARUS DI PISAH JADI METHOD SENDIRI
+            $log = $this->logsRepository->allquery()->where('key', $key)->get();
+            $log_data = [
+                'key' => $key, 
+                'date' => date('Y-m-d H:i:s'),
+                'total' => 1,
+                'list_id' => $contact["partner_id"]
+            ];  
+            if (isset($log_data[0])) {
+                $log_data = $log_data[0];
+                $log_data['total'] = $log_data['total'] + 1;
+                $log_data['list_id'] = $log_data['list_id'].', '.$contact["partner_id"];
+                $log->update($log_data);
+            } else {
+                $this->logsRepository->create($log_data);
+            }
+            
+            //   CHANGE STATUS to 1, if success send to contaq
+            //   HARUS DI PISAH JADI METHOD SENDIRI
+            //.  URL dipisah juga
+            $payloadUpdate = [
+                'id' =>  $contact["simma_id"]
+            ]
+            $response = Http::withHeaders([
+                'Authorization' =>  $this->simmaToken,
+            ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payload);
+
+            $response = Http::withHeaders([
+                'Authorization' => $this->simmaToken,
+            ])->get($url);
+
             usleep(1000000);  // sleep avery 3 second
         }
 

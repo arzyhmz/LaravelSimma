@@ -11,3 +11,12 @@ $table->string('wa_number')->nullable();
 $table->string('IDN')->nullable();
 $table->string('wa_countrycode')->nullable(); #success, failed
 $table->string('username_wa')->nullable(); #success, failed
+
+### 6Juli migration
+php artisan infyom:scaffold logs
+$table->string(‘date’);
+$table->integer(‘total’);
+$table->text(‘list_id’)->nullable();
+tambah key field ke logs
+
+tambah simma_id to contact, untuk update
