@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLogsTable extends Migration
+class AddFieldToContact extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,13 +13,8 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('date');
-            $table->integer('total');
-            $table->string('list_id');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('contacts', function (Blueprint $table) {
+            $table->string('simma_id')->nullable();
         });
     }
 
@@ -31,6 +25,8 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('logs');
+        Schema::table('contacts', function (Blueprint $table) {
+            //
+        });
     }
 }

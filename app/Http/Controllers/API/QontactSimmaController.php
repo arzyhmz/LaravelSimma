@@ -28,52 +28,53 @@ class QontactSimmaController extends Controller{
 
 
     public function list_change_simma(Request $request){
-        $page = $request->get('page', '');
-        $url = "https://simma.wahanavisi.org/laravel/public/v2/origin-wab";
+        $next=false;
+        $page = $request->get('page', 1);
+        $url = "https://apimaster.wahanavisi.org/public/api/origin-wab";
         if($page) {
             $url = $url."?page=".$page;
         }
         $response = $this->getFromSimma($url);
-        $datas = $response->json();
+        $responseJSON = $response->json();
+        $datas = $responseJSON['data'];
         foreach ($datas as $data) {
-            if (isset($data[0])) {
-                $data = $data[0];
-                $prevData = $this->contactRepository->allquery()
-                    ->where('partner_id', $data['partner_id']);
-                $payload = [
-                    'partner_id' => $data["partner_id"],           
-                    'name' => $data["Name"],
-                    'phone_number' => $data["phone_number"],
-                    'wa_number' => $data["wa_number"],
-                    'wa_countrycode' => $data["wa_countrycode"],
-                    'date_of_birth' => $data["date_of_birth"],
-                    'source' => $data["source"],
-                    'name_see' => $data["name_see"],
-                    'motivation_code' => $data["motivation_code"],
-                    'join_date' => $data["join_date"],
-                    'title' => $data["title"],
-                    'sp' => $data["state_sp"],
-                    'en' => $data["state_en"],
-                    'pl' => $data["state_pl"],
-                    'dr' => $data["state_dr"],
-                    'date_added' =>  date('Y-m-d H:i:s'),
-                    'email_sponsor' => $data["email_sponsor"],
-                    'IDN' => $data["IDN"],
-                    'contact_email' => $data['email_sponsor'],
-                    'status' => "0",
-                    'need_tp_post' => 'true',
-                    'sponsor_id' => 'string',
-                    'qontact_id' => 'string',
-                ];
-                if ($prevData->count() > 0) {
-                    $payload['update_at'] = date('Y-m-d H:i:s');
-                    $prevData->update($payload);
-                } else {
-                    $contact = $this->contactRepository->create($payload);
-                }
+            $prevData = $this->contactRepository->allquery()
+                ->where('simma_id', $data['id']);
+            $payload = [
+                'partner_id' => $data["partner_id"],           
+                'name' => $data["first_name"].' '.$data["last_name"],
+                'phone_number' => $data["phone_number"],
+                'wa_number' => $data["wa_number"],
+                'wa_countrycode' => $data["wa_countrycode"],
+                'date_of_birth' => $data["date_of_birth"],
+                'source' => $data["source"],
+                'name_see' => $data["name_see"],
+                'motivation_code' => $data["motivation_code"],
+                'join_date' => $data["join_date"],
+                'title' => $data["title"],
+                'sp' => $data["state_sp"],
+                'en' => $data["state_en"],
+                'pl' => $data["state_pl"],
+                'dr' => $data["state_dr"],
+                'date_added' =>  date('Y-m-d H:i:s'),
+                'email_sponsor' => $data["email_sponsor"],
+                // 'IDN' => $data["IDN"],
+                'contact_email' => $data['email_sponsor'],
+                'status' => "0",
+                'need_tp_post' => 'true',
+                'sponsor_id' => 'string',
+                'qontact_id' => 'string',
+                'simma_id' => $data["id"],
+            ];
+            if ($prevData->count() > 0) {
+                $payload['update_at'] = date('Y-m-d H:i:s');
+                $prevData->update($payload);
+            } else {
+                $contact = $this->contactRepository->create($payload);
             }
+
         }
-        return response()->json(['data'=>$response->json(), 'status'=>'success']);
+        return response()->json(['data'=>$responseJSON, 'status'=>'success']);
     }
 
     public function post_contact_to_qontact(Request $request){
@@ -87,9 +88,10 @@ class QontactSimmaController extends Controller{
         $token = $response["access_token"];
         $contacts = $this->contactRepository->allquery()
             ->limit($pageSize)
-            ->orderBy('partner_id', 'ASC')
+            ->orderBy('name', 'ASC')
             ->where('status', "0")->get();
-        $key = time();
+        $key = date('Y-m-d H:i:s');
+       
         foreach ($contacts as $contact) {
             $payload = [
                 'sponsor_id' => $contact["partner_id"],
@@ -198,7 +200,8 @@ class QontactSimmaController extends Controller{
                 ],
                 "unique_hub_account"=> null
             ];
-            //   POST TO QONTACT
+
+            //   POST TO QONTACT Baru create, kaau update harus pake put
             //   HARUS DI PISAH JADI METHOD SENDIRI
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$token,
@@ -216,7 +219,7 @@ class QontactSimmaController extends Controller{
             } else {
                 $input = [
                     'error_message' => $response,
-                    'status' =>  'posted_to_qontact',
+                    'status' =>  '0',
                     'posted_status' => 'failed',
                     'posted_to_qontact_date' => $current_date
                 ];  
@@ -226,19 +229,19 @@ class QontactSimmaController extends Controller{
             //   CREATE OR UPDATE LOGS
             //   HARUS DI PISAH JADI METHOD SENDIRI
             $log = $this->logsRepository->allquery()->where('key', $key)->get();
-            $log_data = [
-                'key' => $key, 
-                'date' => date('Y-m-d H:i:s'),
+            $logData = [
+                'key' => $key,
+                'date' => $key,
                 'total' => 1,
                 'list_id' => $contact["partner_id"]
             ];  
-            if (isset($log_data[0])) {
-                $log_data = $log_data[0];
-                $log_data['total'] = $log_data['total'] + 1;
-                $log_data['list_id'] = $log_data['list_id'].', '.$contact["partner_id"];
-                $log->update($log_data);
+            if (isset($log[0])) {
+                $log = $log[0];
+                $logData['total'] = $log['total'] + 1;
+                $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
+                $log->update($logData);
             } else {
-                $this->logsRepository->create($log_data);
+                $this->logsRepository->create($logData);
             }
             
             //   CHANGE STATUS to 1, if success send to contaq
@@ -246,18 +249,14 @@ class QontactSimmaController extends Controller{
             //.  URL dipisah juga
             $payloadUpdate = [
                 'id' =>  $contact["simma_id"]
-            ]
+            ];
             $response = Http::withHeaders([
                 'Authorization' =>  $this->simmaToken,
             ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payload);
-
-            $response = Http::withHeaders([
-                'Authorization' => $this->simmaToken,
-            ])->get($url);
-
+            
             usleep(1000000);  // sleep avery 3 second
         }
 
-        return response()->json(['data'=>$token, 'status'=>'success']);
+        return response()->json(['status'=>'success']);
     }
 }

@@ -3,8 +3,8 @@
         <thead>
             <tr>
                 <th>Date</th>
-        <th>Total</th>
-        <th>List Id</th>
+                <th>Total</th>
+                <th>List Id</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -12,8 +12,8 @@
         @foreach($logs as $logs)
             <tr>
                 <td>{{ $logs->date }}</td>
-            <td>{{ $logs->total }}</td>
-            <td>{{ $logs->list_id }}</td>
+                <td>{{ $logs->total }}</td>
+                <td>{{ $logs->list_id }}</td>
                 <td>
                     {!! Form::open(['route' => ['logs.destroy', $logs->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

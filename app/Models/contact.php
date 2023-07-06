@@ -71,7 +71,8 @@ class contact extends Model
         'wa_number',
         'IDN',
         'wa_countrycode',
-        'username_wa'
+        'username_wa',
+        'simma_id'
     ];
 
     /**
@@ -112,7 +113,8 @@ class contact extends Model
         'wa_number' => 'string',
         'IDN' => 'string',
         'wa_countrycode' => 'string',
-        'username_wa' => 'string'
+        'username_wa' => 'string',
+        'simma_id' => 'string',
     ];
 
     /**

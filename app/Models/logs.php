@@ -43,7 +43,7 @@ class logs extends Model
     protected $casts = [
         'id' => 'integer',
         'key' => 'string',
-        'date' => 'date',
+        'date' => 'string',
         'total' => 'integer',
         'list_id' => 'string',
     ];

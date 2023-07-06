@@ -30,7 +30,7 @@ class contactController extends AppBaseController
     public function index(Request $request)
     {
         $contacts = $this->contactRepository->allQuery();
-        $contacts = $contacts->orderBy('table_id', 'ASC')->get();
+        $contacts = $contacts->orderBy('name', 'ASC')->get();
 
         return view('contacts.index')
             ->with('contacts', $contacts);
