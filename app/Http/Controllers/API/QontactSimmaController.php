@@ -214,7 +214,6 @@ class QontactSimmaController extends Controller{
                 ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
                 $response = $response->json();
             }
-
             $current_date = date('Y-m-d H:i:s');
             if (isset($response['response']['id'])){
                 $input = [
@@ -247,12 +246,9 @@ class QontactSimmaController extends Controller{
                 //   HARUS DI PISAH JADI METHOD SENDIRI
                 //.  URL dipisah juga
                 $payloadUpdate = [
-                    'id' =>  (int)$contact["simma_id"]
+                    "id" =>  (int)$contact["simma_id"]
                 ];
-                $responseUpdate = Http::withHeaders([
-                    'Authorization' =>  $this->simmaToken,
-                    'X-CSRF-TOKEN' => Session::token(),
-                ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
+                $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             } 
             
             // jika update, response dari qontact tidak selengkap create
@@ -289,17 +285,18 @@ class QontactSimmaController extends Controller{
                 //   HARUS DI PISAH JADI METHOD SENDIRI
                 //.  URL dipisah juga
                 $payloadUpdate = [
-                    'id' =>  $contact["simma_id"]
+                    "id" =>  (int)$contact["simma_id"]
                 ];
-                $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
+                $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             } else {
-                $input = [
+                $input2 = [
                     'error_message' => $response['meta']['developer_message'],
-                    'status' =>  '0',
+                    'status' =>  '2',
                     'posted_status' => 'failed',
                     'posted_to_qontact_date' => $current_date
                 ];  
-                $contact->update($input);
+                $contact->update($input2);
+                // harusnya kirim ke simma dg status 2
             }
             
         }
