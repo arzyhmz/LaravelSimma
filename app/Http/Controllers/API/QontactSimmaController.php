@@ -253,8 +253,6 @@ class QontactSimmaController extends Controller{
                     'Authorization' =>  $this->simmaToken,
                     'X-CSRF-TOKEN' => Session::token(),
                 ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
-                print_r($responseUpdate);
-                dd("stop");
             } 
             
             // jika update, response dari qontact tidak selengkap create
@@ -294,7 +292,6 @@ class QontactSimmaController extends Controller{
                     'id' =>  $contact["simma_id"]
                 ];
                 $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
-                dd($responseUpdate);
             } else {
                 $input = [
                     'error_message' => $response['meta']['developer_message'],
