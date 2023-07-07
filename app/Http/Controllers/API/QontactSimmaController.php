@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\contactRepository;
 use App\Repositories\logsRepository;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use App\Models\contact;
 use App\Jobs\GetDetailContactFromSimma;
 
@@ -61,9 +62,6 @@ class QontactSimmaController extends Controller{
                 // 'IDN' => $data["IDN"],
                 'contact_email' => $data['email_sponsor'],
                 'status' => "0",
-                'need_tp_post' => 'true',
-                'sponsor_id' => 'string',
-                'qontact_id' => 'string',
                 'simma_id' => $data["id"],
             ];
             if ($prevData->count() > 0) {
@@ -96,6 +94,7 @@ class QontactSimmaController extends Controller{
             $payload = [
                 'sponsor_id' => $contact["partner_id"],
                 "first_name"=> $contact['name'],
+                "email"=> $contact['email_sponsor'],
                 "last_name"=> $contact['name'],
                 "telephone"=> $contact['phone_number'].$contact['phone_number'],
                 "date_of_birth"=> $contact['date_of_birth'],
@@ -203,12 +202,21 @@ class QontactSimmaController extends Controller{
 
             //   POST TO QONTACT Baru create, kaau update harus pake put
             //   HARUS DI PISAH JADI METHOD SENDIRI
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$token,
-            ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
-            $response = $response->json();
+            $response = ['meta'=>['developer_message' => '']];
+            if (isset($contact['qontact_id'])) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.$token,
+                ])->put('https://app.qontak.com/api/v3.1/contacts/'.$contact['qontact_id'], $payload);
+                $response = $response->json();
+            } else {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.$token,
+                ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
+                $response = $response->json();
+            }
+
             $current_date = date('Y-m-d H:i:s');
-            if ($response['response']['id']){
+            if (isset($response['response']['id'])){
                 $input = [
                     'qontact_id' => $response['response']['id'], 
                     'status' =>  "1",
@@ -216,47 +224,89 @@ class QontactSimmaController extends Controller{
                     'posted_to_qontact_date' => $current_date
                 ];  
                 $contact->update($input);
+
+                //   CREATE OR UPDATE LOGS
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                $log = $this->logsRepository->allquery()->where('key', $key)->get();
+                $logData = [
+                    'key' => $key,
+                    'date' => $key,
+                    'total' => 1,
+                    'list_id' => $contact["partner_id"]
+                ];  
+                if (isset($log[0])) {
+                    $log = $log[0];
+                    $logData['total'] = $log['total'] + 1;
+                    $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
+                    $log->update($logData);
+                } else {
+                    $this->logsRepository->create($logData);
+                }
+                
+                //   CHANGE STATUS to 1, if success send to contaq
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                //.  URL dipisah juga
+                $payloadUpdate = [
+                    'id' =>  (int)$contact["simma_id"]
+                ];
+                $responseUpdate = Http::withHeaders([
+                    'Authorization' =>  $this->simmaToken,
+                    'X-CSRF-TOKEN' => Session::token(),
+                ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
+                print_r($responseUpdate);
+                dd("stop");
+            } 
+            
+            // jika update, response dari qontact tidak selengkap create
+            // kita hanya bisa update status jadi 1 dan update posted to qontact date jadi yang terbaru
+            // terus tetep create log dan update ke simma
+            else if ($response['meta']['developer_message'] === 'Success') {
+                // update setelah update
+                $input = [
+                    'status' =>  "1",
+                    'posted_status' => 'success',
+                    'posted_to_qontact_date' => $current_date
+                ];  
+                $contact->update($input);
+
+                //   CREATE OR UPDATE LOGS
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                $log = $this->logsRepository->allquery()->where('key', $key)->get();
+                $logData = [
+                    'key' => $key,
+                    'date' => $key,
+                    'total' => 1,
+                    'list_id' => $contact["partner_id"]
+                ];  
+                if (isset($log[0])) {
+                    $log = $log[0];
+                    $logData['total'] = $log['total'] + 1;
+                    $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
+                    $log->update($logData);
+                } else {
+                    $this->logsRepository->create($logData);
+                }
+                
+                //   CHANGE STATUS to 1, if success send to contaq
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                //.  URL dipisah juga
+                $payloadUpdate = [
+                    'id' =>  $contact["simma_id"]
+                ];
+                $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab/', $payloadUpdate);
+                dd($responseUpdate);
             } else {
                 $input = [
-                    'error_message' => $response,
+                    'error_message' => $response['meta']['developer_message'],
                     'status' =>  '0',
                     'posted_status' => 'failed',
                     'posted_to_qontact_date' => $current_date
                 ];  
                 $contact->update($input);
             }
-
-            //   CREATE OR UPDATE LOGS
-            //   HARUS DI PISAH JADI METHOD SENDIRI
-            $log = $this->logsRepository->allquery()->where('key', $key)->get();
-            $logData = [
-                'key' => $key,
-                'date' => $key,
-                'total' => 1,
-                'list_id' => $contact["partner_id"]
-            ];  
-            if (isset($log[0])) {
-                $log = $log[0];
-                $logData['total'] = $log['total'] + 1;
-                $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
-                $log->update($logData);
-            } else {
-                $this->logsRepository->create($logData);
-            }
             
-            //   CHANGE STATUS to 1, if success send to contaq
-            //   HARUS DI PISAH JADI METHOD SENDIRI
-            //.  URL dipisah juga
-            $payloadUpdate = [
-                'id' =>  $contact["simma_id"]
-            ];
-            $response = Http::withHeaders([
-                'Authorization' =>  $this->simmaToken,
-            ])->post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payload);
-            
-            usleep(1000000);  // sleep avery 3 second
         }
 
-        return response()->json(['status'=>'success']);
+        return response()->json(['status'=>'process finish (see your logs)']);
     }
 }

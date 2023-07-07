@@ -14,6 +14,7 @@
                 <!-- <th>Added Date</th> -->
                 <!-- <th>Updated Date</th> -->
                 <th>Posted To Qontact</th>
+                <th>Qontact ID</th>
                 <th>status</th>
                 <th >Action</th>
             </tr>
@@ -33,6 +34,7 @@
                 <!-- <td>{{ $contact->date_added }}</td> -->
                 <!-- <td> </td> -->
                 <td>{{ $contact->posted_to_qontact_date }}</td>
+                <td>{{ $contact->qontact_id }}</td>
                 <td>{{ $contact->status }}</td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}
