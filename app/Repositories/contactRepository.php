@@ -18,6 +18,7 @@ class contactRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
+        'last_name',
         'contact_email',
         'phone_number',
         'status',

@@ -43,7 +43,8 @@ class QontactSimmaController extends Controller{
                 ->where('simma_id', $data['id']);
             $payload = [
                 'partner_id' => $data["partner_id"],           
-                'name' => $data["first_name"].' '.$data["last_name"],
+                'name' => $data["first_name"],
+                'last_name' => $data["last_name"],
                 'phone_number' => $data["phone_number"],
                 'wa_number' => $data["wa_number"],
                 'wa_countrycode' => $data["wa_countrycode"],
@@ -94,9 +95,9 @@ class QontactSimmaController extends Controller{
             $payload = [
                 'sponsor_id' => $contact["partner_id"],
                 "first_name"=> $contact['name'],
+                "last_name"=> $contact['last_name'],
                 "email"=> $contact['email_sponsor'],
-                "last_name"=> $contact['name'],
-                "telephone"=> $contact['phone_number'].$contact['phone_number'],
+                "telephone"=> $contact['wa_number'],
                 "date_of_birth"=> $contact['date_of_birth'],
                 "source"=> $contact['source'],
                 "additional_fields"=> [
@@ -296,7 +297,25 @@ class QontactSimmaController extends Controller{
                     'posted_to_qontact_date' => $current_date
                 ];  
                 $contact->update($input2);
+                
                 // harusnya kirim ke simma dg status 2
+                //   CREATE OR UPDATE LOGS
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                $log = $this->logsRepository->allquery()->where('key', $key)->get();
+                $logData = [
+                    'key' => $key,
+                    'date' => $key,
+                    'total' => 1,
+                    'failed_list_id' => $contact["partner_id"]
+                ];  
+                if (isset($log[0])) {
+                    $log = $log[0];
+                    $logData['total'] = $log['total'] + 1;
+                    $logData['failed_list_id'] = $log['failed_list_id'].', '.$contact["partner_id"];
+                    $log->update($logData);
+                } else {
+                    $this->logsRepository->create($logData);
+                }
             }
             
         }

@@ -5,16 +5,17 @@
                 <!-- <th>Table ID</th> -->
                 <!-- <th>Partner ID</th> -->
                 <!-- <th>Qontact ID</th> -->
-                <th>Name</th>
+                <th>Full Name</th>
                 <!-- <th>Status</th> -->
                 <!-- <th>Contact Email</th> -->
                 <th>Phone Number</th>
-                <th>Added date</th>
-                <th>Updated date</th>
+                <th>Added </th>
+                <th>Updated </th>
                 <!-- <th>Added Date</th> -->
                 <!-- <th>Updated Date</th> -->
                 <th>Posted To Qontact</th>
                 <th>Qontact ID</th>
+                <th>Partner ID</th>
                 <th>status</th>
                 <th >Action</th>
             </tr>
@@ -24,7 +25,7 @@
             <tr>
                 <!-- <td>{{ $contact->table_id }}</td> -->
                 <!-- <td>{{ $contact->partner_id }}</td> -->
-                <td>{{ $contact->name }}</td>
+                <td>{{ $contact->name }} {{ $contact->last_name }}</td>
                 <!-- <td>{{ $contact->qontact_id }}</td> -->
                 <!-- <td>{{ $contact->status }}</td>  -->
                 <!-- <td>{{ $contact->contact_email }}</td> -->
@@ -35,6 +36,7 @@
                 <!-- <td> </td> -->
                 <td>{{ $contact->posted_to_qontact_date }}</td>
                 <td>{{ $contact->qontact_id }}</td>
+                <td>{{ $contact->partner_id }}</td>
                 <td>{{ $contact->status }}</td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}

@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLogsTable extends Migration
+class UpdateLogsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,13 +13,8 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('date');
-            $table->integer('total');
-            $table->string('list_id')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('logs', function (Blueprint $table) {
+            $table->string('failed_list_id');
         });
     }
 
@@ -31,6 +25,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('logs');
+        //
     }
 }

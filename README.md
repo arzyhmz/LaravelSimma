@@ -20,3 +20,8 @@ $table->text(‘list_id’)->nullable();
 tambah key field ke logs
 
 tambah simma_id to contact, untuk update
+
+
+### 12 Juli 2023
+add failed_ids to logs
+add firstname last name and drop name to contatcts

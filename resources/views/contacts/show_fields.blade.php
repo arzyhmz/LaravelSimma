@@ -1,7 +1,12 @@
 <!-- Name Field -->
 <div class="form-group">
-    {!! Form::label('name', 'Name:') !!}
+    {!! Form::label('name', 'First Name:') !!}
     {{ $contact->name }}
+</div>
+
+<div class="form-group">
+    {!! Form::label('name', 'Last Name:') !!}
+    {{ $contact->last_name }}
 </div>
 
 <div class="form-group">
@@ -53,7 +58,7 @@
 <!-- Phone Number Field -->
 <div class="form-group">
     {!! Form::label('phone_number', 'Phone Number:') !!}
-    {{ $contact->phone_number }}
+    {{ $contact->wa_countrycode }}{{ $contact->wa_number }}
 </div>
 
 
@@ -103,12 +108,10 @@
 </div>
 
 <!-- Need Tp Post Field -->
-<!-- <div class="form-group">
-    {!! Form::label('need_tp_post', 'Need Tp Post:') !!}
-    {{ $contact->need_tp_post }}
-</div> -->
-
-
+<div class="form-group">
+    {!! Form::label('need_tp_post', 'Name See:') !!}
+    {{ $contact->name_see }}
+</div> 
 
 <!-- Sp Field -->
 <div class="form-group">
@@ -133,6 +136,11 @@
 <div class="form-group">
     {!! Form::label('dr', 'Dr:') !!}
     {{ $contact->dr }}
+</div>
+
+<div class="form-group">
+    {!! Form::label('dr', 'Error Message:') !!}
+    {{ $contact->error_message }}
 </div>
 
 

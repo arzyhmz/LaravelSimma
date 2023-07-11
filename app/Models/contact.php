@@ -43,6 +43,7 @@ class contact extends Model
 
     public $fillable = [
         'name',
+        'last_name',
         'contact_email',
         'phone_number',
         'status',
@@ -84,6 +85,7 @@ class contact extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
+        'last_name' => 'string',
         'contact_email' => 'string',
         'phone_number' => 'string',
         'status' => 'string',

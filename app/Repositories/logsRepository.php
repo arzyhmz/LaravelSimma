@@ -21,6 +21,7 @@ class logsRepository extends BaseRepository
         'key',
         'total',
         'list_id',
+        'failed_list_id'
     ];
 
     /**

@@ -12,8 +12,13 @@
 
 <!-- List Id Field -->
 <div class="form-group">
-    {!! Form::label('list_id', 'List Id:') !!}
+    {!! Form::label('list_id', 'Success IDs:') !!}
     <p>{{ $logs->list_id }}</p>
+</div>
+
+<div class="form-group">
+    {!! Form::label('list_id', 'Failed IDs:') !!}
+    <p>{{ $logs->failed_list_id }}</p>
 </div>
 
 <!-- Created At Field -->

@@ -32,7 +32,8 @@ class logs extends Model
         'date',
         'key',
         'total',
-        'list_id'
+        'list_id',
+        'failed_list_id'
     ];
 
     /**
@@ -46,6 +47,7 @@ class logs extends Model
         'date' => 'string',
         'total' => 'integer',
         'list_id' => 'string',
+        'failed_list_id' => 'string',
     ];
 
     /**
