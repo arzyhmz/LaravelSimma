@@ -247,7 +247,8 @@ class QontactSimmaController extends Controller{
                 //   HARUS DI PISAH JADI METHOD SENDIRI
                 //.  URL dipisah juga
                 $payloadUpdate = [
-                    "id" =>  (int)$contact["simma_id"]
+                    "id" =>  (int)$contact["simma_id"],
+                    "status" =>  1
                 ];
                 $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             } 
@@ -286,7 +287,8 @@ class QontactSimmaController extends Controller{
                 //   HARUS DI PISAH JADI METHOD SENDIRI
                 //.  URL dipisah juga
                 $payloadUpdate = [
-                    "id" =>  (int)$contact["simma_id"]
+                    "id" =>  (int)$contact["simma_id"],
+                    "status" =>  1
                 ];
                 $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             } else {
@@ -316,6 +318,15 @@ class QontactSimmaController extends Controller{
                 } else {
                     $this->logsRepository->create($logData);
                 }
+
+                //   CHANGE STATUS to 1, if success send to contaq
+                //   HARUS DI PISAH JADI METHOD SENDIRI
+                //.  URL dipisah juga
+                $payloadUpdate = [
+                    "id" =>  (int)$contact["simma_id"],
+                    "status" =>  2
+                ];
+                $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             }
             
         }
