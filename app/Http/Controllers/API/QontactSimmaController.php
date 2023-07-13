@@ -103,9 +103,9 @@ class QontactSimmaController extends Controller{
                 "additional_fields"=> [
                     [
                         "id"=> 8478028,
-                        "name"=> "nama_see",
-                        "value"=> $contact['nama_see'],
-                        "value_name"=> $contact['nama_see']
+                        "name"=> "name_see",
+                        "value"=> $contact['name_see'],
+                        "value_name"=> $contact['name_see']
                     ],
                     [
                         "id"=> 8478029,
