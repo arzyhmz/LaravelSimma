@@ -17,6 +17,7 @@
                 <th>Qontact ID</th>
                 <th>Partner ID</th>
                 <th>status</th>
+                <th>Last Sync Chat</th>
                 <th >Action</th>
             </tr>
         </thead>
@@ -38,6 +39,7 @@
                 <td>{{ $contact->qontact_id }}</td>
                 <td>{{ $contact->partner_id }}</td>
                 <td>{{ $contact->status }}</td>
+                <td>{{ $contact->last_update_chat }}</td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
