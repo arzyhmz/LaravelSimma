@@ -25,3 +25,12 @@ tambah simma_id to contact, untuk update
 ### 12 Juli 2023
 add failed_ids to logs
 add ast name and 
+
+### 27Juli23
+partner_id:
+room_id
+chat
+status
+udpate_date
+
+

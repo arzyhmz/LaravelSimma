@@ -10,3 +10,15 @@
         <span>Logs</span>
     </a>
 </li>
+<li class="nav-item {{ Request::is('wabHistories*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('wabHistories.index') }}">
+        <i class="nav-icon icon-cursor"></i>
+        <span>Wab Histories</span>
+    </a>
+</li>
+<li class="nav-item {{ Request::is('chatLogs*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('chatLogs.index') }}">
+        <i class="nav-icon icon-cursor"></i>
+        <span>Chat Logs</span>
+    </a>
+</li>

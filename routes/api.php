@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\QontactSimmaController;
+use App\Http\Controllers\API\ChatSimmaController;
 
 
 /*
@@ -25,8 +26,11 @@ Route::resource('contacts', contactAPIController::class);
 Route::get('list-change-simma', [QontactSimmaController::class, 'list_change_simma'])
     ->name('list_change_simma');
 
- Route::get('detail-simma', [QontactSimmaController::class, 'list_change_simma_detail'])
-    ->name('list_change_simma_detail');
+//  Route::get('detail-simma', [QontactSimmaController::class, 'list_change_simma_detail'])
+//     ->name('list_change_simma_detail');
 
 Route::get('post-contact-to-qontact', [QontactSimmaController::class, 'post_contact_to_qontact'])
     ->name('post_contact_to_qontact');
+
+Route::get('sync_chat', [ChatSimmaController::class, 'sync_chat'])
+    ->name('sync_chat');

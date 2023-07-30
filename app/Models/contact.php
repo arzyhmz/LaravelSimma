@@ -73,7 +73,8 @@ class contact extends Model
         'IDN',
         'wa_countrycode',
         'username_wa',
-        'simma_id'
+        'simma_id',
+        'last_update_chat'
     ];
 
     /**
@@ -103,7 +104,6 @@ class contact extends Model
         'dr' => 'string',
         'email_sponsor' => 'string',
         'need_tp_post' => 'string',
-        // neww
         'table_id' => 'string',
         'table_name' => 'string',
         'date_added' => 'string',
@@ -117,6 +117,7 @@ class contact extends Model
         'wa_countrycode' => 'string',
         'username_wa' => 'string',
         'simma_id' => 'string',
+        'last_update_chat'=>'string'
     ];
 
     /**

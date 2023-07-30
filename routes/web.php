@@ -22,3 +22,7 @@ Route::resource('contacts', App\Http\Controllers\contactController::class);
 
 
 Route::resource('logs', App\Http\Controllers\logsController::class);
+
+Route::resource('wabHistories', App\Http\Controllers\wab_historyController::class);
+
+Route::resource('chatLogs', App\Http\Controllers\chat_logsController::class);

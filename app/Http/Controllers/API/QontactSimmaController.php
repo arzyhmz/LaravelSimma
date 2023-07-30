@@ -15,18 +15,20 @@ use App\Jobs\GetDetailContactFromSimma;
 class QontactSimmaController extends Controller{
     private $contactRepository;
     private $logsRepository;
+    
     public function __construct(contactRepository $contactRepo, logsRepository $logsRepo){
         $this->contactRepository = $contactRepo;
         $this->logsRepository = $logsRepo;
     }
+
     private $simmaToken = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
+
     private function getFromSimma($url) {
         $response = Http::withHeaders([
             'Authorization' => $this->simmaToken,
         ])->get($url);
         return $response;
     }
-
 
     public function list_change_simma(Request $request){
         $next=false;
@@ -97,16 +99,16 @@ class QontactSimmaController extends Controller{
                 "first_name"=> $contact['name'],
                 "last_name"=> $contact['last_name'],
                 "email"=> $contact['email_sponsor'],
-                "telephone"=> $contact['wa_number'],
+                "telephone"=> $contact['wa_countrycode'].$contact['wa_number'],
                 "date_of_birth"=> $contact['date_of_birth'],
                 "source"=> $contact['source'],
                 "additional_fields"=> [
-                    [
-                        "id"=> 8478028,
-                        "name"=> "name_see",
-                        "value"=> $contact['name_see'],
-                        "value_name"=> $contact['name_see']
-                    ],
+                    // [
+                    //     "id"=> 8478028,
+                    //     "name"=> "name_see",
+                    //     "value"=> $contact['name_see'],
+                    //     "value_name"=> $contact['name_see']
+                    // ],
                     [
                         "id"=> 8478029,
                         "name"=> "motivation_code",
@@ -293,7 +295,7 @@ class QontactSimmaController extends Controller{
                 $responseUpdate = Http::post('https://apimaster.wahanavisi.org/public/api/update-status-wab', $payloadUpdate);
             } else {
                 $input2 = [
-                    'error_message' => $response['meta']['developer_message'],
+                    'error_message' => $response['meta']['developer_message'].' - '.$response['meta']['message'],
                     'status' =>  '2',
                     'posted_status' => 'failed',
                     'posted_to_qontact_date' => $current_date
