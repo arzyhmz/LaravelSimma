@@ -31,7 +31,7 @@ class ChatSimmaController extends Controller{
     private $simmaToken = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyNjUsImlzcyI6Imh0dHBzOlwvXC9leHBsdXNtb2JpbGUud29ybGR2aXNpb24ub3JnLnBoXC9leHBsdXMtbW9iaWxlXC9kZXZlbG9wZXJcL2xhcmF2ZWwtYmFja2VuZFwvcHVibGljXC9hcGlcL2F1dGhlbnRpY2F0ZSIsImlhdCI6MTUyNjUzMzkzNywiZXhwIjoxNTI2NTM3NTM3LCJuYmYiOjE1MjY1MzM5MzcsImp0aSI6IjMyNzE0ZmExYjk4OWFjMGFkMTdhYjkyZGQ4NDY3MmRjIn0.rJP7aBrteIFrtwzXBsBIu2jyhLQFkdPmOb8cDc9hEVM";
 
     public function sync_chat(Request $request){
-        $pageSize = $request->get('page_size', 10);
+        $pageSize = $request->get('page_size', 2);
         $responseToken = Http::asForm()->post('https://app.qontak.com/oauth/token/', [
             "username"=> "trialwahanavisi@qontak.com",
             "password"=> "Password123!",
@@ -43,7 +43,8 @@ class ChatSimmaController extends Controller{
         // 1. Looping Contaq Jika last update chat kurang dari hari ini
         $today = date('Y-m-d');
         $contacts = $this->contactRepository->allquery()
-            // ->where('last_update_chat', '<', $today)
+            ->where('last_update_chat', '<', $today)
+            ->orWhereNull('last_update_chat')
             ->limit($pageSize)
             ->orderBy('name', 'ASC')->get();
         
