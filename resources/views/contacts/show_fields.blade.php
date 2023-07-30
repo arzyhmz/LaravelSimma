@@ -138,6 +138,12 @@
     {{ $contact->dr }}
 </div>
 
+<!-- Dr Field -->
+<div class="form-group">
+    {!! Form::label('dr', 'Last sync chat:') !!}
+    {{ $contact->last_update_chat }}
+</div>
+
 <div class="form-group">
     {!! Form::label('dr', 'Error Message:') !!}
     {{ $contact->error_message }}
