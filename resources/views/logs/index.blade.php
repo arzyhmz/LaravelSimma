@@ -2,7 +2,7 @@
 
 @section('content')
     <ol class="breadcrumb">
-        <li class="breadcrumb-item">Logs</li>
+        <li class="breadcrumb-item">Contact Logs</li>
     </ol>
     <div class="container-fluid">
         <div class="animated fadeIn">
@@ -12,7 +12,7 @@
                      <div class="card">
                          <div class="card-header">
                              <i class="fa fa-align-justify"></i>
-                             logs
+                             Contact Logs
                              <a class="pull-right" href="{{ route('logs.create') }}"><i class="fa fa-plus-square fa-lg"></i></a>
                          </div>
                          <div class="card-body">
