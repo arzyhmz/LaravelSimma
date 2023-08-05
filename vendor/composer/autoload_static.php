@@ -546,7 +546,7 @@ class ComposerStaticInitecc9bca2221b305e85a497c66754d02d
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\API\\QontactSimmaController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/QontactSimmaController.php',
-        'App\\Http\\Controllers\\API\\contactAPIController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/contactAPIController.php',
+        'App\\Http\\Controllers\\API\\ContactAPIController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/ContactAPIController.php',
         'App\\Http\\Controllers\\AppBaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/AppBaseController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',

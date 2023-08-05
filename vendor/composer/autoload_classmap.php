@@ -9,7 +9,6 @@ return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\API\\QontactSimmaController' => $baseDir . '/app/Http/Controllers/API/QontactSimmaController.php',
-    'App\\Http\\Controllers\\API\\contactAPIController' => $baseDir . '/app/Http/Controllers/API/contactAPIController.php',
     'App\\Http\\Controllers\\AppBaseController' => $baseDir . '/app/Http/Controllers/AppBaseController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
