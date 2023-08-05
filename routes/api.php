@@ -23,14 +23,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('contacts', contactAPIController::class);
 
 // list change will get change and save to database
-Route::get('list-change-simma', [QontactSimmaController::class, 'list_change_simma'])
-    ->name('list_change_simma');
+Route::get('sync-contact-from-simma', [QontactSimmaController::class, 'sync_contact_from_simma'])
+    ->name('sync_contact_from_simma');
 
-//  Route::get('detail-simma', [QontactSimmaController::class, 'list_change_simma_detail'])
-//     ->name('list_change_simma_detail');
-
-Route::get('post-contact-to-qontact', [QontactSimmaController::class, 'post_contact_to_qontact'])
-    ->name('post_contact_to_qontact');
+Route::get('post-contact-to-qontact-web', [QontactSimmaController::class, 'post_contact_to_qontak_web'])
+    ->name('post_contact_to_qontak_web');
 
 Route::get('sync_chat', [ChatSimmaController::class, 'sync_chat'])
     ->name('sync_chat');

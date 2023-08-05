@@ -29,8 +29,9 @@ class contactController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $contacts = $this->contactRepository->allQuery();
-        $contacts = $contacts->orderBy('name', 'ASC')->get();
+        $contacts = $this->contactRepository->allQuery()
+            ->orderBy('name', 'ASC')
+            ->orderBy('last_name', 'ASC')->get();
 
         return view('contacts.index')
             ->with('contacts', $contacts);

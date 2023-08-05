@@ -26,7 +26,7 @@
             <tr>
                 <!-- <td>{{ $contact->table_id }}</td> -->
                 <!-- <td>{{ $contact->partner_id }}</td> -->
-                <td>{{ $contact->name }} {{ $contact->last_name }}</td>
+                <td>{{ $contact->name }} - {{ $contact->last_name }}</td>
                 <!-- <td>{{ $contact->qontact_id }}</td> -->
                 <!-- <td>{{ $contact->status }}</td>  -->
                 <!-- <td>{{ $contact->contact_email }}</td> -->
