@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('contacts', ContactAPIController::class);
+
 
 // list change will get change and save to database
 Route::get('sync-contact-from-simma', [QontactSimmaController::class, 'sync_contact_from_simma'])
