@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\QontactSimmaController;
 use App\Http\Controllers\API\ChatSimmaController;
+use App\Http\Controllers\API\ChildrenSimmaController;
 
 
 /*
@@ -31,3 +32,6 @@ Route::get('post-contact-to-qontact-web', [QontactSimmaController::class, 'post_
 
 Route::get('sync_chat', [ChatSimmaController::class, 'sync_chat'])
     ->name('sync_chat');
+
+Route::get('sync-children-from-simma', [ChildrenSimmaController::class, 'sync_children_from_simma'])
+    ->name('sync_children_from_simma');

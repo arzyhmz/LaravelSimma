@@ -22,3 +22,13 @@
         <span>Wab Logs</span>
     </a>
 </li>
+<li class="nav-item {{ Request::is('childrens*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('childrens.index') }}">
+        <span>Childrens</span>
+    </a>
+</li>
+<li class="nav-item {{ Request::is('childrenLogs*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('childrenLogs.index') }}">
+        <span>Children Logs</span>
+    </a>
+</li>

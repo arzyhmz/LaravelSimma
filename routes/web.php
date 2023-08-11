@@ -26,3 +26,7 @@ Route::resource('logs', App\Http\Controllers\logsController::class);
 Route::resource('wabHistories', App\Http\Controllers\wab_historyController::class);
 
 Route::resource('chatLogs', App\Http\Controllers\chat_logsController::class);
+
+Route::resource('childrens', App\Http\Controllers\childrenController::class);
+
+Route::resource('childrenLogs', App\Http\Controllers\children_logsController::class);

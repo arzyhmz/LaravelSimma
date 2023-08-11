@@ -107,6 +107,21 @@ class ChatSimmaController extends Controller{
     }
 
     private function postChatToSimma($contact, $chatData) {
+        $chatText = $this->formatChatContents($chatData);
+        if(stripos($chatText, "Conversation has been resolved") === false) {
+            $responseData = array(
+                'status' => 'success',
+                'message' => 'Data retrieved successfully',
+                'data' => array(
+                    'name' => 'John Doe',
+                    'age' => 30,
+                    'email' => 'john@example.com'
+                )
+            );
+            // Convert the array to a JSON string
+            $jsonResponse = json_encode($responseData);
+        }
+        
         $payload = [
             "PartnerID" => $contact["partner_id"],
             "RoomID" => $chatData["room_id"],
@@ -130,9 +145,17 @@ class ChatSimmaController extends Controller{
             $log = $log[0];
             $logData['total'] = $log['total'] + 1;
             if ($status==='failed') {
-                $logData['failed_list_id'] = $log['failed_list_id'].', '.$contact["partner_id"];
+                if ($logData['failed_list_id'] !== "") {
+                    $logData['failed_list_id'] = $logData['failed_list_id'].', '.$contact["partner_id"];
+                } else {
+                    $logData['failed_list_id'] = $contact["partner_id"];
+                }
             } else {
-                $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
+                if ($logData['list_id'] !== "") {
+                    $logData['list_id'] = $logData['list_id'].', '.$contact["partner_id"];
+                } else {
+                    $logData['list_id'] = $contact["partner_id"];
+                }
             }
             $log->update($logData);
         } else {

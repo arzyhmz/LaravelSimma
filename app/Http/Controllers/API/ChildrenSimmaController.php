@@ -4,33 +4,34 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\contactRepository;
-use App\Repositories\logsRepository;
+use App\Repositories\childrenRepository;
+use App\Repositories\children_logsRepository;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Models\contact;
 use App\Jobs\GetDetailContactFromSimma;
 use MyFunctions;
 
-class QontactSimmaController extends Controller{
-    private $contactRepository;
-    private $logsRepository;
-    private $getDataContactFromSimmaURL = "https://apimaster.wahanavisi.org/public/api/origin-wab";
+
+class ChildrenSimmaController extends Controller{
+    private $childrenRepository;
+    private $children_logsRepository;
+    private $getDataChildrenFromSimmaURL = "https://apimaster.wahanavisi.org/public/api/children-wab";
     private $postStatusToSimmaURL = "https://apimaster.wahanavisi.org/public/api/update-status-wab";
     
     public function __construct(
-        contactRepository $contactRepo, 
-        logsRepository $logsRepo
+        childrenRepository $contactRepo, 
+        children_logsRepository $logsRepo
     ){
-        $this->contactRepository = $contactRepo;
-        $this->logsRepository = $logsRepo;
+        $this->childrenRepository = $contactRepo;
+        $this->children_logsRepository = $logsRepo;
     }
 
     // sync data from simma to local database
-    public function sync_contact_from_simma(Request $request){
+    public function sync_children_from_simma(Request $request){
         $page = $request->get('page', 1);
         if($page) {
-            $url = $this->getDataContactFromSimmaURL."?page=".$page;
+            $url = $this->getDataChildrenFromSimmaURL."?page=".$page;
         }
         $response = $this->getContactFromSimma($url);
         $responseJSON = $response->json();
@@ -38,94 +39,77 @@ class QontactSimmaController extends Controller{
         foreach ($datas as $data) {
             $payload = [
                 'partner_id' => $data["partner_id"],           
-                'name' => $data["first_name"],
-                'last_name' => $data["last_name"],
-                'phone_number' => $data["phone_number"],
-                'wa_number' => $data["wa_number"],
-                'wa_countrycode' => $data["wa_countrycode"],
-                'date_of_birth' => $data["date_of_birth"],
-                'source' => $data["source"],
-                'name_see' => $data["name_see"],
-                'motivation_code' => $data["motivation_code"],
-                'join_date' => $data["join_date"],
-                'title' => $data["title"],
-                'sp' => $data["state_sp"],
-                'en' => $data["state_en"],
-                'pl' => $data["state_pl"],
-                'dr' => $data["state_dr"],
-                'date_added' =>  date('Y-m-d H:i:s'),
-                'email_sponsor' => $data["email_sponsor"],
-                // 'IDN' => $data["IDN"],
-                'contact_email' => $data['email_sponsor'],
+                'pledge_id' => $data["pledge_id"],
+                'paid_thru' => $data["paid_thru"],
+                'name' => $data["name"],
+                'idn' => $data["idn"],
                 'status' => "0",
-                'simma_id' => $data["id"],
             ];
-            $prevData = $this->contactRepository->allquery()
+            $prevData = $this->childrenRepository->allquery()
                 ->where('simma_id', $data['id']);
             if ($prevData->count() > 0) {
                 $payload['update_at'] = date('Y-m-d H:i:s');
                 $prevData->update($payload);
             } else {
-                $contact = $this->contactRepository->create($payload);
+                $contact = $this->childrenRepository->create($payload);
             }
-
         }
         return response()->json(['data'=>$responseJSON, 'status'=>'success']);
     }
 
     // post data from local database to website qontak
-    public function post_contact_to_qontak_web(Request $request){
-        $pageSize = $request->get('page_size', 10);
-        $response = MyFunctions::getQontakToken();
-        $token = $response["access_token"];
-        $contacts = $this->contactRepository->allquery()
-            ->limit($pageSize)
-            ->orderBy('name', 'ASC')
-            ->orderBy('last_name', 'ASC')
-            ->where('status', "0")->get();
-        $key = date('Y-m-d H:i:s'); 
-        foreach ($contacts as $contact) {
-            $payload = $this->buildPayloadQontak($contact);
-            $response = ['meta'=>['developer_message' => '']];
-            // Update data ke Qontak untuk data yang pernah dikirim sebelumnya (METHOD: PUT)
-            if (isset($contact['qontact_id'])) {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.$token,
-                ])->put('https://app.qontak.com/api/v3.1/contacts/'.$contact['qontact_id'], $payload);
-                $response = $response->json();
-            } 
-            // Create data ke Qontak untuk data Baru (METHOD: POST)
-            else {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.$token,
-                ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
-                $response = $response->json();
-            }
-            // jika berhasil create new contact
-            if (isset($response['response']['id'])){
-                $this->updateStatusContact($contact, '1', 'succcess', $response['response']['id'], "");
-                $this->createOrUpdateLog($key, $contact, 'success');
-                $this->updateContactStatusToSimma(1, $contact);
-            } 
-            // jika response dari contact adalah update bukan create
-            else if ($response['meta']['developer_message'] === 'Success') {
-                // update setelah update
-                $this->updateStatusContact($contact, '1', 'succcess', null, "");
-                $this->createOrUpdateLog($key, $contact, 'success');
-                $this->updateContactStatusToSimma(1, $contact);
-            } 
-            // Jika error post ke qontak (misal duplicate email atau sebagainya)
-            else {
-                $errorMessage = $response['meta']['developer_message'].' - '.$response['meta']['message'];
-                $this->updateStatusContact($contact, '2', 'failed', null, $errorMessage);
-                $this->createOrUpdateLog($key, $contact, 'failed');
-                $this->updateContactStatusToSimma(2, $contact);
-            }
+    // public function post_contact_to_qontak_web(Request $request){
+    //     $pageSize = $request->get('page_size', 10);
+    //     $response = MyFunctions::getQontakToken();
+    //     $token = $response["access_token"];
+    //     $contacts = $this->childrenRepository->allquery()
+    //         ->limit($pageSize)
+    //         ->orderBy('name', 'ASC')
+    //         ->orderBy('last_name', 'ASC')
+    //         ->where('status', "0")->get();
+    //     $key = date('Y-m-d H:i:s'); 
+    //     foreach ($contacts as $contact) {
+    //         $payload = $this->buildPayloadQontak($contact);
+    //         $response = ['meta'=>['developer_message' => '']];
+    //         // Update data ke Qontak untuk data yang pernah dikirim sebelumnya (METHOD: PUT)
+    //         if (isset($contact['qontact_id'])) {
+    //             $response = Http::withHeaders([
+    //                 'Authorization' => 'Bearer '.$token,
+    //             ])->put('https://app.qontak.com/api/v3.1/contacts/'.$contact['qontact_id'], $payload);
+    //             $response = $response->json();
+    //         } 
+    //         // Create data ke Qontak untuk data Baru (METHOD: POST)
+    //         else {
+    //             $response = Http::withHeaders([
+    //                 'Authorization' => 'Bearer '.$token,
+    //             ])->post('https://app.qontak.com/api/v3.1/contacts/', $payload);
+    //             $response = $response->json();
+    //         }
+    //         // jika berhasil create new contact
+    //         if (isset($response['response']['id'])){
+    //             $this->updateStatusContact($contact, '1', 'succcess', $response['response']['id'], "");
+    //             $this->createOrUpdateLog($key, $contact, 'success');
+    //             $this->updateContactStatusToSimma(1, $contact);
+    //         } 
+    //         // jika response dari contact adalah update bukan create
+    //         else if ($response['meta']['developer_message'] === 'Success') {
+    //             // update setelah update
+    //             $this->updateStatusContact($contact, '1', 'succcess', null, "");
+    //             $this->createOrUpdateLog($key, $contact, 'success');
+    //             $this->updateContactStatusToSimma(1, $contact);
+    //         } 
+    //         // Jika error post ke qontak (misal duplicate email atau sebagainya)
+    //         else {
+    //             $errorMessage = $response['meta']['developer_message'].' - '.$response['meta']['message'];
+    //             $this->updateStatusContact($contact, '2', 'failed', null, $errorMessage);
+    //             $this->createOrUpdateLog($key, $contact, 'failed');
+    //             $this->updateContactStatusToSimma(2, $contact);
+    //         }
             
-        }
+    //     }
 
-        return response()->json(['status'=>'process finish (see your logs)']);
-    }
+    //     return response()->json(['status'=>'process finish (see your logs)']);
+    // }
 
     // - - - - -  - - - - HELPER  - - -  - - - - - -  - -
     private function getContactFromSimma($url) {
@@ -247,7 +231,7 @@ class QontactSimmaController extends Controller{
     }
 
     private function createOrUpdateLog($key, $contact, $status) {
-        $log = $this->logsRepository->allquery()->where('key', $key)->get();
+        $log = $this->children_logsRepository->allquery()->where('key', $key)->get();
         $logData = [
             'key' => $key,
             'date' => $key,
@@ -276,7 +260,7 @@ class QontactSimmaController extends Controller{
             } else {
                 $logData['list_id'] = $contact["partner_id"];
             }
-            $this->logsRepository->create($logData);
+            $this->children_logsRepository->create($logData);
         }
     }
 
