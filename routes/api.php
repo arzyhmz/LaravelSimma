@@ -27,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('sync-contact-from-simma', [QontactSimmaController::class, 'sync_contact_from_simma'])
     ->name('sync_contact_from_simma');
 
-Route::get('post-contact-to-qontact-web', [QontactSimmaController::class, 'post_contact_to_qontak_web'])
+Route::get('post-contact-to-qontak-web', [QontactSimmaController::class, 'post_contact_to_qontak_web'])
     ->name('post_contact_to_qontak_web');
 
 Route::get('sync_chat', [ChatSimmaController::class, 'sync_chat'])
@@ -35,3 +35,6 @@ Route::get('sync_chat', [ChatSimmaController::class, 'sync_chat'])
 
 Route::get('sync-children-from-simma', [ChildrenSimmaController::class, 'sync_children_from_simma'])
     ->name('sync_children_from_simma');
+
+Route::get('post-children-to-qontak-web', [ChildrenSimmaController::class, 'post_children_to_qontak_web'])
+    ->name('post_children_to_qontak_web');

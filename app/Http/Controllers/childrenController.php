@@ -29,7 +29,9 @@ class childrenController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $childrens = $this->childrenRepository->all();
+        $childrens = $this->childrenRepository->allQuery()
+            ->orderBy('name', 'ASC')
+            ->get();
 
         return view('childrens.index')
             ->with('childrens', $childrens);
