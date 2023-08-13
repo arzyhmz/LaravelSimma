@@ -29,7 +29,8 @@ class logsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $logs = $this->logsRepository->allQuery()->orderBy('id', 'DESC')->get();
+        $logs = $this->logsRepository->allQuery()->orderBy('id', 'DESC')
+            ->paginate(25)->appends(request()->query());
 
         return view('logs.index')
             ->with('logs', $logs);

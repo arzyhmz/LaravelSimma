@@ -1,0 +1,39 @@
+nav[role="navigation"] {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+nav[role="navigation"] a {
+    padding: 6px 12px;
+    margin: 0 3px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+nav[role="navigation"] a:hover {
+    background-color: #f1f1f1;
+}
+
+nav[role="navigation"] a.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+nav[role="navigation"] .prev,
+nav[role="navigation"] .next {
+    padding: 6px 10px;
+    font-weight: bold;
+}
+
+nav[role="navigation"] .prev {
+    margin-right: 10px;
+}
+
+nav[role="navigation"] .next {
+    margin-left: 10px;
+}

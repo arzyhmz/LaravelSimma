@@ -29,7 +29,8 @@ class wab_historyController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $wabHistories = $this->wabHistoryRepository->all();
+        $wabHistories = $this->wabHistoryRepository->allQuery()
+            ->paginate(25)->appends(request()->query());
 
         return view('wab_histories.index')
             ->with('wabHistories', $wabHistories);

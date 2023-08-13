@@ -29,7 +29,8 @@ class children_logsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $childrenLogs = $this->childrenLogsRepository->all();
+        $childrenLogs = $this->childrenLogsRepository->allQuery()
+            ->paginate(25)->appends(request()->query());
 
         return view('children_logs.index')
             ->with('childrenLogs', $childrenLogs);

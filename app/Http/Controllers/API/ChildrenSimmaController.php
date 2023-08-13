@@ -140,12 +140,8 @@ class ChildrenSimmaController extends Controller{
             "crm_priority_name" => null,
             "crm_company_id" => null,
             "crm_company_name" => null,
-            "crm_lead_ids" => [
-                22
-            ],
-            "crm_lead_name" => [
-                22
-            ],
+            "crm_lead_ids" => [],
+            "crm_lead_name" => [],
             "product_association_ids" =>  [22],
             "product_association_name" =>  [22],
             "product_association_quantity" => [],

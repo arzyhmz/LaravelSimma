@@ -31,7 +31,7 @@ class childrenController extends AppBaseController
     {
         $childrens = $this->childrenRepository->allQuery()
             ->orderBy('name', 'ASC')
-            ->get();
+            ->paginate(25)->appends(request()->query());
 
         return view('childrens.index')
             ->with('childrens', $childrens);

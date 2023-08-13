@@ -31,7 +31,9 @@ class contactController extends AppBaseController
     {
         $contacts = $this->contactRepository->allQuery()
             ->orderBy('name', 'ASC')
-            ->orderBy('last_name', 'ASC')->get();
+            ->orderBy('last_name', 'ASC');
+
+        $contacts = $contacts->paginate(25)->appends(request()->query());
 
         return view('contacts.index')
             ->with('contacts', $contacts);

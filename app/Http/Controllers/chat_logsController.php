@@ -29,7 +29,8 @@ class chat_logsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $chatLogs = $this->chatLogsRepository->all();
+        $chatLogs = $this->chatLogsRepository->allQuery()
+            ->paginate(25)->appends(request()->query());
 
         return view('chat_logs.index')
             ->with('chatLogs', $chatLogs);
