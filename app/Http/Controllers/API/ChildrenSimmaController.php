@@ -39,7 +39,7 @@ class ChildrenSimmaController extends Controller{
         foreach ($datas as $data) {
             $payload = [
                 'partner_id' => $data["partner_id"],           
-                'pledge_id' => $data["pledge_id"],
+                // 'pledge_id' => $data["pledge_id"],
                 'paid_thru' => $data["paid_thru"],
                 'name' => $data["name"],
                 'idn' => $data["idn"],
@@ -213,13 +213,13 @@ class ChildrenSimmaController extends Controller{
         }
     }
 
-    // private function updatechildrentatusToSimma($status, $child) {
-    //     $payloadUpdate = [
-    //         "id" =>  (int)$child["simma_id"],
-    //         "status" =>  1
-    //     ];
-    //     $responseUpdate = Http::post($this->postStatusToSimmaURL, $payloadUpdate);
-    // }
+    private function updatechildrentatusToSimma($status, $child) {
+        $payloadUpdate = [
+            "id" =>  (int)$child["simma_id"],
+            "status" =>  1
+        ];
+        $responseUpdate = Http::post($this->postStatusToSimmaURL, $payloadUpdate);
+    }
 
     private function updateStatuschild($child, $statusNumber, $statusString,  $qontactId, $errorMessage) {
         $input = [
