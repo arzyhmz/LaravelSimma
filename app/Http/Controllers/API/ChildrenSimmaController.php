@@ -88,21 +88,13 @@ class ChildrenSimmaController extends Controller{
             if (isset($response['response']['id'])){
                 $this->updateStatuschild($child, '1', 'succcess', $response['response']['id'], "");
                 $this->createOrUpdateLog($key, $child, 'success');
-                // $this->updatechildrentatusToSimma(1, $child);
+                $this->updatechildrentatusToSimma(1, $child);
             } 
-            // // jika response dari child adalah update bukan create
-            // else if ($response['meta']['developer_message'] === 'Success') {
-            //     // update setelah update
-            //     $this->updateStatuschild($child, '1', 'succcess', null, "");
-            //     $this->createOrUpdateLog($key, $child, 'success');
-            //     // $this->updatechildrentatusToSimma(1, $child);
-            // } 
-            // // Jika error post ke qontak (misal duplicate email atau sebagainya)
             else {
                 $errorMessage = $response['error'];
                 $this->updateStatuschild($child, '2', 'failed', null, $errorMessage);
                 $this->createOrUpdateLog($key, $child, 'failed');
-                // $this->updatechildrentatusToSimma(2, $child);
+                $this->updatechildrentatusToSimma(2, $child);
             }
             
         }

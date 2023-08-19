@@ -34,29 +34,27 @@ class ChatSimmaController extends Controller{
         // GET Contacts list yang last update chat nya kurang dari hari ini
         $today = date('Y-m-d');
         $contacts = $this->contactRepository->allquery()
-            ->where('last_update_chat', '<', $today)
-            ->orWhereNull('last_update_chat')
+            // ->where('last_update_chat', '<', $today)
+            // ->orWhereNull('last_update_chat')
             ->orderBy('name', 'ASC')
             ->orderBy('last_name', 'ASC')
+            // ->orderBy('last_update_chat', 'ASC')
             ->limit($pageSize)->get();
+
         
         $key = date('Y-m-d H:i:s');
         foreach ($contacts as $contact) {
             // GET CHAT
             $responseJSON = $this->getChatFromQontakWeb($contact);
 
-            
             // CREATE CHAT TO DATABASE
             $responseFromSimma = [];
             if (isset($responseJSON['response'][0])) {
                 $chatData = $responseJSON['response'][0];
-                // POST CONTACT TO SIMMA
                 $responseFromSimma = $this->postChatToSimma($contact, $chatData);
-                // SAVE CHAT TO DATABASE
                 // DISINI BISA DITAMBAHKAN JIKA ADA ERROR DARI SIMMA KE CHAT DATA, SEKARANG BELUM
                 $this->createOrUpdateChat($contact, $chatData);
             } else {
-                // do nothing, don't create chat object in database
                 $this->createOrUpdateChat($contact, null);
             }
 
@@ -98,7 +96,7 @@ class ChatSimmaController extends Controller{
         if (!$chatData) {
             $chatDataToSave['room_id']="";
             $chatDataToSave['chat']="";
-            $chatDataToSave['error_message']=$contact['name']." ".$contact['last_name']." doesn't has chat data";
+            $chatDataToSave['message']=$contact['name']." ".$contact['last_name']." doesn't has chat data";
         } else {
             $chatDataToSave['chat'] = $this->formatChatContents($chatData);
             $chatDataToSave['room_id'] = $chatData['room_id'];
@@ -109,29 +107,18 @@ class ChatSimmaController extends Controller{
     private function postChatToSimma($contact, $chatData) {
         $chatText = $this->formatChatContents($chatData);
         if(stripos($chatText, "Conversation has been resolved") === false) {
-            $responseData = array(
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
-                'data' => array(
-                    'name' => 'John Doe',
-                    'age' => 30,
-                    'email' => 'john@example.com'
-                )
-            );
-            // Convert the array to a JSON string
-            $jsonResponse = json_encode($responseData);
+            $payload = [
+                "PartnerID" => $contact["partner_id"],
+                "RoomID" => $chatData["room_id"],
+                "TextHistory" => $this->formatChatContents($chatData),
+            ];
+            $responsePostChat = ['meta'=>['developer_message' => '']];
+            $responsePostChat = Http::withHeaders([
+                'Authorization' => 'Bearer '.env('SIMMA_TOKEN'),
+            ])->post('https://apimaster.wahanavisi.org/public/api/history-wab', $payload);
+            return $responsePostChat->json();
         }
-        
-        $payload = [
-            "PartnerID" => $contact["partner_id"],
-            "RoomID" => $chatData["room_id"],
-            "TextHistory" => $this->formatChatContents($chatData),
-        ];
-        $responsePostChat = ['meta'=>['developer_message' => '']];
-        $responsePostChat = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('SIMMA_TOKEN'),
-        ])->post('https://apimaster.wahanavisi.org/public/api/history-wab', $payload);
-        return $responsePostChat->json();
+        return null;
     }
 
     private function createOrUpdateLog($key, $contact, $status) {
@@ -145,14 +132,14 @@ class ChatSimmaController extends Controller{
             $log = $log[0];
             $logData['total'] = $log['total'] + 1;
             if ($status==='failed') {
-                if ($logData['failed_list_id'] !== "") {
-                    $logData['failed_list_id'] = $logData['failed_list_id'].', '.$contact["partner_id"];
+                if ($log['failed_list_id'] !== "") {
+                    $logData['failed_list_id'] = $log['failed_list_id'].', '.$contact["partner_id"];
                 } else {
                     $logData['failed_list_id'] = $contact["partner_id"];
                 }
             } else {
-                if ($logData['list_id'] !== "") {
-                    $logData['list_id'] = $logData['list_id'].', '.$contact["partner_id"];
+                if ($log['list_id'] !== "") {
+                    $logData['list_id'] = $log['list_id'].', '.$contact["partner_id"];
                 } else {
                     $logData['list_id'] = $contact["partner_id"];
                 }

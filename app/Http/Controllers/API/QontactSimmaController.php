@@ -38,8 +38,8 @@ class QontactSimmaController extends Controller{
         foreach ($datas as $data) {
             $payload = [
                 'partner_id' => $data["partner_id"],           
-                'name' => $data["first_name"],
-                'last_name' => $data["last_name"],
+                'name' => $data["first_name"].' '.$data["last_name"],
+                // 'last_name' => $data["last_name"],
                 'phone_number' => $data["phone_number"],
                 'wa_number' => $data["wa_number"],
                 'wa_countrycode' => $data["wa_countrycode"],
@@ -283,7 +283,7 @@ class QontactSimmaController extends Controller{
     private function updateContactStatusToSimma($status, $contact) {
         $payloadUpdate = [
             "id" =>  (int)$contact["simma_id"],
-            "status" =>  1
+            "status" =>  $status
         ];
         $responseUpdate = Http::post($this->postStatusToSimmaURL, $payloadUpdate);
     }

@@ -35,6 +35,7 @@ class wab_history extends Model
         'room_id',
         'chat',
         'status',
+        'message',
         'update_date'
     ];
 
@@ -48,6 +49,7 @@ class wab_history extends Model
         'partner_id' => 'string',
         'room_id' => 'string',
         'chat' => 'string',
+        'message' => 'string',
         'status' => 'string',
         'update_date' => 'date'
     ];

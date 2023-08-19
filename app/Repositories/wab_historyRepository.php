@@ -20,6 +20,7 @@ class wab_historyRepository extends BaseRepository
         'partner_id',
         'room_id',
         'chat',
+        'message',
         'status',
         'update_date'
     ];
