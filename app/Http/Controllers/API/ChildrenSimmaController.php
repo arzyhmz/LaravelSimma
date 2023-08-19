@@ -17,7 +17,7 @@ class ChildrenSimmaController extends Controller{
     private $childrenRepository;
     private $children_logsRepository;
     private $getDataChildrenFromSimmaURL = "https://apimaster.wahanavisi.org/public/api/children-wab";
-    private $postStatusToSimmaURL = "https://apimaster.wahanavisi.org/public/api/update-status-wab";
+    private $postStatusToSimmaURL = "https://apimaster.wahanavisi.org/public/api/update-status-children";
     
     public function __construct(
         childrenRepository $childRepo, 
