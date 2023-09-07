@@ -140,7 +140,7 @@ class QontactSimmaController extends Controller{
             'sponsor_id' => $contact["partner_id"],
             "first_name"=> $contact['name'],
             "last_name"=> $contact['last_name'],
-            "email"=> $contact['email_sponsor'],
+            "email"=> $contact['partner_id'].'@wvi.org',
             "telephone"=> $contact['wa_countrycode'].$contact['wa_number'],
             "date_of_birth"=> $contact['date_of_birth'],
             "source"=> $contact['source'],
