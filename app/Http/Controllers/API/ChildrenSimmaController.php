@@ -72,9 +72,10 @@ class ChildrenSimmaController extends Controller{
             $response = ['meta'=>['developer_message' => '']];
             // Update data ke Qontak untuk data yang pernah dikirim sebelumnya (METHOD: PUT)
             if (isset($child['qontak_id'])) {
+                
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer '.$token,
-                ])->put('https://app.qontak.com/api/v3.1/deals'.$child['qontak_id'], $payload);
+                ])->put('https://app.qontak.com/api/v3.1/deals/'.$child['qontak_id'], $payload);
                 $response = $response->json();
             } 
             // Create data ke Qontak untuk data Baru (METHOD: POST)
@@ -87,6 +88,10 @@ class ChildrenSimmaController extends Controller{
             // jika berhasil create new child
             if (isset($response['response']['id'])){
                 $this->updateStatuschild($child, '1', 'succcess', $response['response']['id'], "");
+                $this->createOrUpdateLog($key, $child, 'success');
+                $this->updatechildrentatusToSimma(1, $child);
+            } else if (isset($response['meta']['status']) == 200){
+                $this->updateStatuschild($child, '1', 'succcess', null, "");
                 $this->createOrUpdateLog($key, $child, 'success');
                 $this->updatechildrentatusToSimma(1, $child);
             } 

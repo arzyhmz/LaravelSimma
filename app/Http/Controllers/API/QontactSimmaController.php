@@ -56,7 +56,7 @@ class QontactSimmaController extends Controller{
                 'date_added' =>  date('Y-m-d H:i:s'),
                 'email_sponsor' => $data["email_sponsor"],
                 // 'IDN' => $data["IDN"],
-                'contact_email' => $data['email_sponsor'],
+                'contact_email' => $data["partner_id"].'@wvi.org',
                 'status' => "0",
                 'simma_id' => $data["id"],
             ];
