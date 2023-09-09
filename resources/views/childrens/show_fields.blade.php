@@ -34,6 +34,12 @@
     <p>{{ $children->status }}</p>
 </div>
 
+<!-- Status Field -->
+<div class="form-group">
+    {!! Form::label('qontakId', 'Qontak Id:') !!}
+    <p>{{ $children->qontak_id }}</p>
+</div>
+
 <!-- Message Field -->
 <div class="form-group">
     {!! Form::label('message', 'Message:') !!}
