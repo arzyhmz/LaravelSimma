@@ -42,11 +42,12 @@ class ChildrenSimmaController extends Controller{
                 // 'pledge_id' => $data["pledge_id"],
                 'paid_thru' => $data["paid_thru"],
                 'name' => $data["name"],
+                'simma_id' => $data["id"],
                 'idn' => $data["idn"],
                 'status' => "0",
             ];
             $prevData = $this->childrenRepository->allquery()
-                ->where('simma_id', $data['id']);
+                ->where('idn', $data['idn']);
             if ($prevData->count() > 0) {
                 $payload['update_at'] = date('Y-m-d H:i:s');
                 $prevData->update($payload);
