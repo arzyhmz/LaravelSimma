@@ -8,8 +8,8 @@ class MyFunctions {
     public static function getQontakToken()
     {
         $response = Http::asForm()->post('https://app.qontak.com/oauth/token/', [
-            "username"=> "trialwahanavisi@qontak.com",
-            "password"=> "Password123!",
+            "username"=> env('USERNAME_QONTAK'),
+            "password"=> env('PASSWORD_QONTAK'),
             "grant_type" => "password"
         ]);
         return $response->json();

@@ -32,3 +32,8 @@
         <span>Children Logs</span>
     </a>
 </li>
+<!-- <li class="nav-item {{ Request::is('configs*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('configs.index') }}">
+        <span>Configs</span>
+    </a>
+</li> -->
