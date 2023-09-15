@@ -226,8 +226,8 @@ class QontactSimmaController extends Controller{
                 [
                     "id"=> 8478039,
                     "name"=> "upload_date",
-                    "value"=> date('Y-m-d H:i:s'),
-                    "value_name"=> date('Y-m-d H:i:s')
+                    "value"=> date('d-m-Y'),
+                    "value_name"=> date('d-m-Y')
                 ],
                 [
                     "id"=> 8478040,

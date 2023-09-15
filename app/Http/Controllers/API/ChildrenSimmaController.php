@@ -73,7 +73,6 @@ class ChildrenSimmaController extends Controller{
             $response = ['meta'=>['developer_message' => '']];
             // Update data ke Qontak untuk data yang pernah dikirim sebelumnya (METHOD: PUT)
             if (isset($child['qontak_id'])) {
-                
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer '.$token,
                 ])->put('https://app.qontak.com/api/v3.1/deals/'.$child['qontak_id'], $payload);
