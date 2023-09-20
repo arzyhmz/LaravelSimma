@@ -61,7 +61,7 @@ class QontactSimmaController extends Controller{
                 'simma_id' => $data["id"],
             ];
             $prevData = $this->contactRepository->allquery()
-                ->where('simma_id', $data['id']);
+                ->where('partner_id', $data['partner_id']);
             if ($prevData->count() > 0) {
                 $payload['update_at'] = date('Y-m-d H:i:s');
                 $prevData->update($payload);
