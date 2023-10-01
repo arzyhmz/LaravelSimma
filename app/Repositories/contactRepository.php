@@ -49,7 +49,8 @@ class contactRepository extends BaseRepository
         'wa_countrycode',
         'username_wa',
         'simma_id',
-        'last_update_chat'
+        'last_update_chat',
+        'change_phone'
     ];
 
     /**

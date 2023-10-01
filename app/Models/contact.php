@@ -74,7 +74,8 @@ class contact extends Model
         'wa_countrycode',
         'username_wa',
         'simma_id',
-        'last_update_chat'
+        'last_update_chat',
+        'change_phone'
     ];
 
     /**
@@ -117,7 +118,8 @@ class contact extends Model
         'wa_countrycode' => 'string',
         'username_wa' => 'string',
         'simma_id' => 'string',
-        'last_update_chat'=>'string'
+        'last_update_chat'=>'string',
+        'change_phone'=>'string'
     ];
 
     /**

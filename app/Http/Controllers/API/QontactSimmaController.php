@@ -58,12 +58,18 @@ class QontactSimmaController extends Controller{
                 // 'IDN' => $data["IDN"],
                 'contact_email' => $data["partner_id"].'@wvi.org',
                 'status' => "0",
+                'change_phone' => "",
                 'simma_id' => $data["id"],
             ];
             $prevData = $this->contactRepository->allquery()
                 ->where('partner_id', $data['partner_id']);
             if ($prevData->count() > 0) {
                 $payload['update_at'] = date('Y-m-d H:i:s');
+                if ($prevData->wa_number !== $data["wa_number"]) {
+                    $payload['change_phone'] = 'Y';
+                } else {
+                    $payload['change_phone'] = 'N';
+                }
                 $prevData->update($payload);
             } else {
                 $contact = $this->contactRepository->create($payload);
@@ -136,12 +142,16 @@ class QontactSimmaController extends Controller{
     }
 
     private function buildPayloadQontak($contact) {
+        $phoneNumber = $contact['wa_countrycode'].$contact['wa_number'];
+        if (!$contact["change_phone"] == 'N' ) {
+            $phoneNumber = "";
+        }
         return [
             'sponsor_id' => $contact["partner_id"],
             "first_name"=> $contact['name'],
             "last_name"=> $contact['last_name'],
             "email"=> $contact['partner_id'].'@wvi.org',
-            "telephone"=> $contact['wa_countrycode'].$contact['wa_number'],
+            "telephone"=> $phoneNumber,
             "date_of_birth"=> $contact['date_of_birth'],
             "source"=> $contact['source'],
             "additional_fields"=> [
