@@ -143,16 +143,11 @@ class QontactSimmaController extends Controller{
     }
 
     private function buildPayloadQontak($contact) {
-        $phoneNumber = $contact['wa_countrycode'].$contact['wa_number'];
-        if (!$contact["change_phone"] == 'N' ) {
-            $phoneNumber = "";
-        }
-        return [
+        $data =  [
             'sponsor_id' => $contact["partner_id"],
             "first_name"=> $contact['name'],
             "last_name"=> $contact['last_name'],
             "email"=> $contact['partner_id'].'@wvi.org',
-            "telephone"=> $phoneNumber,
             "date_of_birth"=> $contact['date_of_birth'],
             "source"=> $contact['source'],
             "additional_fields"=> [
@@ -255,6 +250,13 @@ class QontactSimmaController extends Controller{
             ],
             "unique_hub_account"=> null
         ];
+
+        $phoneNumber = $contact['wa_countrycode'].$contact['wa_number'];
+        if ($contact["change_phone"] == 'Y' || $contact["change_phone"] == '') {
+            $data["telephone"] = $phoneNumber;
+        } 
+
+
     }
 
     private function createOrUpdateLog($key, $contact, $status) {
