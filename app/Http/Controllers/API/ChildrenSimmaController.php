@@ -87,11 +87,11 @@ class ChildrenSimmaController extends Controller{
             }
             // jika berhasil create new child
             if (isset($response['response']['id'])){
-                $this->updateStatuschild($child, '1', 'succcess', $response['response']['id'], "");
+                $this->updateStatuschild($child, '1', 'success', $response['response']['id'], "");
                 $this->createOrUpdateLog($key, $child, 'success');
                 $this->updatechildrentatusToSimma(1, $child);
-            } else if (isset($response['meta']['status']) == 200){
-                $this->updateStatuschild($child, '1', 'succcess', null, "");
+            } else if (isset($response['meta']['status']) && $response['meta']['status'] == 200) {
+                $this->updateStatuschild($child, '1', 'success', null, "");
                 $this->createOrUpdateLog($key, $child, 'success');
                 $this->updatechildrentatusToSimma(1, $child);
             } 
@@ -101,7 +101,6 @@ class ChildrenSimmaController extends Controller{
                 $this->createOrUpdateLog($key, $child, 'failed');
                 $this->updatechildrentatusToSimma(2, $child);
             }
-            
         }
 
         return response()->json(['status'=>'process finish (see your logs)']);
