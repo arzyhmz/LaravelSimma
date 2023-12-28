@@ -96,7 +96,11 @@ class ChildrenSimmaController extends Controller{
                 $this->updatechildrentatusToSimma(1, $child);
             } 
             else {
-                $errorMessage = $response['error'];
+                if (isset($response['meta']['message'])) {
+                    $errorMessage = $response['meta']['message'];
+                } else {
+                    $errorMessage = "No error message available";
+                }
                 $this->updateStatuschild($child, '2', 'failed', null, $errorMessage);
                 $this->createOrUpdateLog($key, $child, 'failed');
                 $this->updatechildrentatusToSimma(2, $child);
