@@ -49,7 +49,7 @@ class ChildrenSimmaController extends Controller{
             $prevData = $this->childrenRepository->allquery()
                 ->where('idn', $data['idn']);
             if ($prevData->count() > 0) {
-                $payload['update_at'] = date('Y-m-d H:i:s');
+                $payload['udpate_date'] = date('Y-m-d H:i:s');
                 $prevData->update($payload);
             } else {
                 $child = $this->childrenRepository->create($payload);

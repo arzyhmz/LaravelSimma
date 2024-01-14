@@ -57,7 +57,7 @@ class children extends Model
         'idn' => 'string',
         'status' => 'string',
         'message' => 'string',
-        'udpate_date' => 'date',
+        'udpate_date' => 'string',
         'simma_id' => 'string',
         'qontak_id' => 'string'
     ];
